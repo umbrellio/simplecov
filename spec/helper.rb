@@ -24,6 +24,7 @@ ensure
 end
 
 RSpec.configure do |config|
+  config.warnings = true
   project_path_regexp = Regexp.escape(Dir.pwd)
   # Fail tests if Kernel#warn is executed
   config.around(:example) do |example|
@@ -38,7 +39,7 @@ RSpec.configure do |config|
         end
       end
       example.call
-      kernel_warn_callers.keep_if { |c| c =~ /^#{project_path_regexp}/ }
+      kernel_warn_callers.select! { |c| c =~ /^#{project_path_regexp}/ }
       expect(kernel_warn_callers).to be_empty, "Kernel\#warn called from: #{kernel_warn_callers.join(', ')}."
     ensure
       Kernel.class_exec do
