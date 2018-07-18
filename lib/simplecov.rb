@@ -50,7 +50,8 @@ module SimpleCov
         @result = nil
         self.running = true
         self.pid = Process.pid
-        Coverage.start
+
+        start_coverage_measurment
       else
         warn "WARNING: SimpleCov is activated, but you're not running Ruby 1.9+ - no coverage analysis will happen"
         warn "Starting with SimpleCov 1.0.0, even no-op compatibility with Ruby <= 1.8 will be entirely dropped."
@@ -68,7 +69,7 @@ module SimpleCov
         Dir[tracked_files].each do |file|
           absolute = File.expand_path(file)
 
-          result[absolute] ||= LinesClassifier.new.classify(File.foreach(absolute))
+          result[absolute] ||= CoverageClassifier.call(File.foreach(absolute))
         end
       end
 
@@ -84,7 +85,9 @@ module SimpleCov
 
       # Collect our coverage result
       if running
-        @result = SimpleCov::Result.new add_not_loaded_files(Coverage.result)
+        adapted_result = SimpleCov::ResultAdapter.call(Coverage.result)
+
+        @result = SimpleCov::Result.new add_not_loaded_files(adapted_result)
       end
 
       # If we're using merging of results, store the current result
@@ -144,6 +147,20 @@ module SimpleCov
     def load_adapter(name)
       warn "#{Kernel.caller.first}: [DEPRECATION] #load_adapter is deprecated. Use #load_profile instead."
       load_profile(name)
+    end
+
+    #
+    # Trigger Coverage.start depends on given config
+    #
+    # With Positive branch it supports all coverage measurement types
+    # With Negative branch it supports only line coverage measurement type
+    #
+    def start_coverage_measurment
+      if measurement_targets
+        Coverage.start(:all)
+      else
+        Coverage.start
+      end
     end
 
     #
@@ -273,6 +290,8 @@ require "simplecov/raw_coverage"
 require "simplecov/result_merger"
 require "simplecov/command_guesser"
 require "simplecov/version"
+require "simplecov/coverage_classifier"
+require "simplecov/result_adapter"
 
 # Load default config
 require "simplecov/defaults" unless ENV["SIMPLECOV_NO_DEFAULTS"]

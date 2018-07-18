@@ -10,7 +10,7 @@ require "simplecov/formatter/multi_formatter"
 #
 module SimpleCov
   module Configuration # rubocop:disable ModuleLength
-    attr_writer :filters, :groups, :formatter
+    attr_writer :filters, :groups, :formatter, :measurement_targets
 
     #
     # The root for the project. This defaults to the
@@ -69,6 +69,14 @@ module SimpleCov
     #
     def filters
       @filters ||= []
+    end
+
+    #
+    # Details covers all measurement types of only lines
+    # this feature only supported with ruby version >= 2.5
+    #
+    def measurement_targets
+      @measurement_targets ||= false
     end
 
     # The name of the command (a.k.a. Test Suite) currently running. Used for result
@@ -285,6 +293,16 @@ module SimpleCov
     #
     def add_group(group_name, filter_argument = nil, &filter_proc)
       groups[group_name] = parse_filter(filter_argument, &filter_proc)
+    end
+
+    #
+    # Define if the report should include any other standarts of coverage measurment except
+    # :lines which is the default
+    #
+    # @param [Boolean] target
+    #
+    def use_measurement_targets(target = false)
+      @measurement_targets = target
     end
 
   private
