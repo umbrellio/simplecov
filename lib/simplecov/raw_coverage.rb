@@ -6,28 +6,42 @@ module SimpleCov
 
     # Merges multiple Coverage.result hashes
     def merge_results(*results)
-      results.reduce({}) do |result, merged|
-        merge_resultsets(result, merged)
+      results.reduce({}) do |result, second_result|
+        merge_result_sets(result, second_result)
       end
     end
 
     # Merges two Coverage.result hashes
-    def merge_resultsets(result1, result2)
-      (result1.keys | result2.keys).each_with_object({}) do |filename, merged|
-        file1 = result1[filename]
-        file2 = result2[filename]
-        merged[filename] = merge_file_coverage(file1, file2)
+    def merge_result_sets(first_result, second_result)
+      (first_result.keys | second_result.keys).each_with_object({}) do |file_name, merged|
+
+        first_result_file  = first_result[file_name]
+        second_result_file = second_result[file_name]
+
+        merged[file_name] = merge_file_coverage(first_result_file, second_result_file)
       end
     end
 
     def merge_file_coverage(file1, file2)
+
       return (file1 || file2).dup unless file1 && file2
 
-      file1.map.with_index do |count1, index|
-        count2 = file2[index]
-        merge_line_coverage(count1, count2)
+      merge_results = {}
+      merge_results.merge!( :lines => lines_coverage(file1, file2))
+      # TODO: add branche coverage
+      merge_results
+    end
+
+    def lines_coverage(file1, file2)
+      if file1[:lines] == nil
+        binding.pry
+      end
+      file1[:lines].map.with_index do |line1, index|
+        line2 = file2[:lines][index]
+        merge_line_coverage(line1, line2)
       end
     end
+
 
     def merge_line_coverage(count1, count2)
       sum = count1.to_i + count2.to_i
