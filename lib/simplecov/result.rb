@@ -67,10 +67,26 @@ module SimpleCov
     # Loads a SimpleCov::Result#to_hash dump
     def self.from_hash(hash)
       command_name, data = hash.first
-      result = SimpleCov::Result.new(data["coverage"])
+
+      result = SimpleCov::Result.new(
+        symbolize_names_of_coverage_results(data["coverage"])
+      )
+
       result.command_name = command_name
       result.created_at = Time.at(data["timestamp"])
       result
+    end
+
+    # Manage coverting the keys of coverage data hash from strings to symboles
+    # Becuase after calling JSON.prase the coverage hash with stringified keys what breaks some logics
+    # inside the process
+    # @return [Hash]
+    def self.symbolize_names_of_coverage_results(coverage_data)
+      coverage_data.each_with_object({}) do |(file_name, file_coverage_result), coverage_results|
+        coverage_results.merge!(
+          file_name => file_coverage_result.inject({}){ |elem, (k, v)| elem[k.to_sym] = v; elem }
+        )
+      end
     end
 
   private
