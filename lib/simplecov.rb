@@ -286,12 +286,17 @@ require "simplecov/filter"
 require "simplecov/formatter"
 require "simplecov/last_run"
 require "simplecov/lines_classifier"
-require "simplecov/raw_coverage"
 require "simplecov/result_merger"
 require "simplecov/command_guesser"
 require "simplecov/version"
 require "simplecov/coverage_classifier"
 require "simplecov/result_adapter"
+require "simplecov/combiners/base_combiner"
+require "simplecov/combiners/branches_coverage"
+require "simplecov/combiners/files_coverage"
+require "simplecov/combiners/lines_coverage"
+require "simplecov/results_combiner"
+
 
 # Load default config
 require "simplecov/defaults" unless ENV["SIMPLECOV_NO_DEFAULTS"]
