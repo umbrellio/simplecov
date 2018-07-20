@@ -68,8 +68,7 @@ module SimpleCov
         result = result.dup
         Dir[tracked_files].each do |file|
           absolute = File.expand_path(file)
-
-          result[absolute] ||= CoverageClassifier.call(File.foreach(absolute))
+          result[absolute] ||= CoverageClassifier.call(absolute)
         end
       end
 
@@ -296,6 +295,7 @@ require "simplecov/combiners/branches_coverage"
 require "simplecov/combiners/files_coverage"
 require "simplecov/combiners/lines_coverage"
 require "simplecov/results_combiner"
+require "simplecov/branches_classifier"
 
 # Load default config
 require "simplecov/defaults" unless ENV["SIMPLECOV_NO_DEFAULTS"]
