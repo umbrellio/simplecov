@@ -2,7 +2,7 @@
 
 module SimpleCov
   module Combiners
-    class FilesCoverage < BaseCombiner
+    class FilesCombiner < BaseCombiner
       attr_reader :combined_results
 
       def initialize(first_coverage, second_coverage)
@@ -53,7 +53,7 @@ module SimpleCov
     private
 
       def call_lines_combiner
-        SimpleCov::Combiners::LinesCoverage.combine!(
+        SimpleCov::Combiners::LinesCombiner.combine!(
           first_coverage[:lines],
           second_coverage[:lines]
         )

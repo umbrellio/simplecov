@@ -38,7 +38,7 @@ module SimpleCov
     # @return [Hash]
     #
     def combine_file_coverage(first_coverage, second_coverage)
-      SimpleCov::Combiners::FilesCoverage.combine!(first_coverage, second_coverage)
+      SimpleCov::Combiners::FilesCombiner.combine!(first_coverage, second_coverage)
     end
   end
 end
