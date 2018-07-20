@@ -85,7 +85,7 @@ module SimpleCov
 
       attr_accessor :coverage
 
-      def initialize(branch_attrs)
+      def initialize(*branch_attrs)
         @type       = branch_attrs[0]
         @id         = branch_attrs[1]
         @start_line = branch_attrs[2]
