@@ -6,14 +6,15 @@ module SimpleCov
   # It merges the lines & branches classification in one hash
   #
   class CoverageClassifier
-    attr_reader :lines
+    attr_reader :lines, :absolute_path
 
     def self.call(*args)
       new(*args).merge
     end
 
-    def initialize(lines)
-      @lines = lines
+    def initialize(absolute_path)
+      @lines             = File.foreach(absolute_path)
+      @absolute_path     = absolute_path
       @classified_result = {}
     end
 
@@ -32,7 +33,7 @@ module SimpleCov
 
     def classified_branches
       @classified_result.merge!(
-        :branches => {} # SimpleCov::BranchesClassifier.classify(lines)
+        :branches => SimpleCov::BranchesClassifier.classify(absolute_path)
       )
     end
   end
