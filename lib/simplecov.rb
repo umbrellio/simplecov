@@ -297,7 +297,6 @@ require "simplecov/combiners/files_coverage"
 require "simplecov/combiners/lines_coverage"
 require "simplecov/results_combiner"
 
-
 # Load default config
 require "simplecov/defaults" unless ENV["SIMPLECOV_NO_DEFAULTS"]
 

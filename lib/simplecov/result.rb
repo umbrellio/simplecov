@@ -83,9 +83,9 @@ module SimpleCov
     # @return [Hash]
     def self.symbolize_names_of_coverage_results(coverage_data)
       coverage_data.each_with_object({}) do |(file_name, file_coverage_result), coverage_results|
-        coverage_results.merge!(
-          file_name => file_coverage_result.inject({}){ |elem, (k, v)| elem[k.to_sym] = v; elem }
-        )
+        coverage_results[file_name] = file_coverage_result.each_with_object({}) do |(k, v), cov_elem|
+          cov_elem[k.to_sym] = v
+        end
       end
     end
 

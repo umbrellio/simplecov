@@ -5,7 +5,7 @@ module SimpleCov
   # Representation of a source file including it's coverage data, source code,
   # source lines and featuring helpers to interpret that data.
   #
-  class SourceFile
+  class SourceFile # rubocop:disable Metrics/ClassLength
     # Representation of a single line in a source file including
     # this specific line's source code, line_number and code coverage,
     # with the coverage being either nil (coverage not applicable, e.g. comment
@@ -85,13 +85,13 @@ module SimpleCov
 
       attr_accessor :coverage
 
-      def initialize(type, id, start_line, start_col, end_line, end_col)
-        @type       = type
-        @id         = id
-        @start_line = start_line
-        @start_col  = start_col
-        @end_line   = end_line
-        @end_col    = end_col
+      def initialize(branch_attrs)
+        @type       = branch_attrs[0]
+        @id         = branch_attrs[1]
+        @start_line = branch_attrs[2]
+        @start_col  = branch_attrs[3]
+        @end_line   = branch_attrs[4]
+        @end_col    = branch_attrs[5]
         @coverage   = 0
       end
 
@@ -189,7 +189,6 @@ module SimpleCov
       @branches_collection ||= []
 
       given_branches.each do |branch_args, value|
-
         branch = SimpleCov::SourceFile::Branch.new(*branch_args)
 
         if value.is_a?(Integer)
