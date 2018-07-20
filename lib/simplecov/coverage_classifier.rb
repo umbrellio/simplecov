@@ -27,13 +27,13 @@ module SimpleCov
 
     def classified_lines
       @classified_result.merge!(
-        :lines => SimpleCov::LinesClassifier.new.classify(lines)
+        :lines => SimpleCov::Classifiers::LinesClassifier.new.classify(lines)
       )
     end
 
     def classified_branches
       @classified_result.merge!(
-        :branches => SimpleCov::BranchesClassifier.classify(absolute_path)
+        :branches => SimpleCov::Classifiers::BranchesClassifier.classify(absolute_path)
       )
     end
   end
