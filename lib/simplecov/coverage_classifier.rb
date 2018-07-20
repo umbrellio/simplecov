@@ -1,20 +1,20 @@
+# frozen_string_literal: true
+
 module SimpleCov
   #
   # Manage classification of the coverage results for given lines
   # It merges the lines & branches classification in one hash
   #
   class CoverageClassifier
-
     attr_reader :lines
+
+    def self.call(*args)
+      new(*args).merge
+    end
 
     def initialize(lines)
       @lines = lines
       @classified_result = {}
-    end
-
-
-    def self.call(*args)
-      new(*args).merge
     end
 
     def merge
@@ -32,7 +32,7 @@ module SimpleCov
 
     def classified_branches
       @classified_result.merge!(
-        :branches => {} #SimpleCov::BranchesClassifier.classify(lines)
+        :branches => {} # SimpleCov::BranchesClassifier.classify(lines)
       )
     end
   end

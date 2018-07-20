@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SimpleCov
   module Combiners
     class BranchesCombiner < BaseCombiner
@@ -23,11 +25,8 @@ module SimpleCov
       #
       def combine_branches
         combine_result = first_coverage.clone
-
         first_coverage.each do |(condition, branches_inside)|
-
           branches_inside.each do |(branch_key, branch_coverage_value)|
-
             compared_branch_coverage = second_coverage[condition][branch_key]
 
             combine_result[condition][branch_key] = branch_coverage_value + compared_branch_coverage

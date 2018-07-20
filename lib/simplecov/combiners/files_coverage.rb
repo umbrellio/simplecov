@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 module SimpleCov
   module Combiners
     class FilesCoverage < BaseCombiner
       attr_reader :combined_results
 
       def initialize(first_coverage, second_coverage)
-        @combined_results    = {}
+        @combined_results ||= {}
         super
       end
 
@@ -48,7 +50,7 @@ module SimpleCov
         )
       end
 
-      private
+    private
 
       def call_lines_combiner
         SimpleCov::Combiners::LinesCoverage.combine!(

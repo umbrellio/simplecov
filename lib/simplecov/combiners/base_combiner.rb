@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SimpleCov
   module Combiners
     #
@@ -20,7 +22,7 @@ module SimpleCov
         puts "override this method"
       end
 
-      private
+    private
 
       def empty_coverage?
         first_coverage && second_coverage

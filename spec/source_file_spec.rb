@@ -6,7 +6,7 @@ if SimpleCov.usable?
   describe SimpleCov::SourceFile do
     COVERAGE_FOR_SAMPLE_RB = {
       :lines => [nil, 1, 1, 1, nil, nil, 1, 0, nil, nil, nil, nil, nil, nil, nil, nil],
-    }
+    }.freeze
 
     context "a source file initialized with some coverage data" do
       subject do
@@ -66,7 +66,7 @@ if SimpleCov.usable?
 
     context "simulating potential Ruby 1.9 defect -- see Issue #56" do
       subject do
-        SimpleCov::SourceFile.new(source_fixture("sample.rb"), {:lines => COVERAGE_FOR_SAMPLE_RB[:lines] << nil })
+        SimpleCov::SourceFile.new(source_fixture("sample.rb"), :lines => COVERAGE_FOR_SAMPLE_RB[:lines] << nil)
       end
 
       it "has 16 source lines regardless of extra data in coverage array" do
@@ -86,7 +86,7 @@ if SimpleCov.usable?
     context "a file that is never relevant" do
       COVERAGE_FOR_NEVER_RB = {
         :lines => [nil, nil],
-      }
+      }.freeze
 
       subject do
         SimpleCov::SourceFile.new(source_fixture("never.rb"), COVERAGE_FOR_NEVER_RB)
@@ -104,7 +104,7 @@ if SimpleCov.usable?
     context "a file where nothing is ever executed mixed with skipping #563" do
       COVERAGE_FOR_SKIPPED_RB = {
         :lines => [nil, nil, nil, nil],
-      }
+      }.freeze
 
       subject do
         SimpleCov::SourceFile.new(source_fixture("skipped.rb"), COVERAGE_FOR_SKIPPED_RB)
@@ -115,7 +115,6 @@ if SimpleCov.usable?
       end
 
       it "has 0.0 covered_percent" do
-
         expect(subject.covered_percent).to eq 0.0
       end
     end
@@ -123,7 +122,7 @@ if SimpleCov.usable?
     context "a file where everything is skipped and missed #563" do
       COVERAGE_FOR_SKIPPED_RB_2 = {
         :lines => [nil, nil, 0, nil],
-      }
+      }.freeze
 
       subject do
         SimpleCov::SourceFile.new(source_fixture("skipped.rb"), COVERAGE_FOR_SKIPPED_RB_2)
@@ -141,7 +140,7 @@ if SimpleCov.usable?
     context "a file where everything is skipped/irrelevamt but executed #563" do
       COVERAGE_FOR_SKIPPED_AND_EXECUTED_RB = {
         :lines => [nil, nil, 1, 1, 0, nil, nil, nil],
-      }
+      }.freeze
 
       subject do
         SimpleCov::SourceFile.new(source_fixture("skipped_and_executed.rb"), COVERAGE_FOR_SKIPPED_AND_EXECUTED_RB)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SimpleCov
   class ResultsCombiner
     attr_reader :results
@@ -28,12 +30,12 @@ module SimpleCov
     end
 
     #
-    # <description>
+    # Combine two files coverage results
     #
-    # @param [<type>] first_coverage <description>
-    # @param [<type>] second_coverage <description>
+    # @param [Hash] first_coverage
+    # @param [Hash] second_coverage
     #
-    # @return [<type>] <description>
+    # @return [Hash]
     #
     def combine_file_coverage(first_coverage, second_coverage)
       SimpleCov::Combiners::FilesCoverage.combine!(first_coverage, second_coverage)
