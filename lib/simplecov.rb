@@ -76,18 +76,55 @@ module SimpleCov
     end
 
     #
+    # Unite the result not matter what coverage type called
+    #
+    # @return [Hash]
+    #
+    def adapt_coverage_result
+      @result = SimpleCov::ResultAdapter.call(Coverage.result)
+    end
+
+    #
+    # Filter coverage result
+    # The result before filter also have result of coverage for files
+    # are not related to the project like loaded gems coverage.
+    #
+    # @return [Hash]
+    #
+    def filter_coverage_result
+      @result = SimpleCov::CoverageResultFilter.call(@result)
+    end
+
+    #
+    # Initialize result with files that are not included by coverage
+    # and added inside the config block
+    #
+    # @return [Hash]
+    #
+    def result_with_not_loaded_files
+      @result = SimpleCov::Result.new add_not_loaded_files(@result)
+    end
+
+    #
+    # Call steps of handling coverage result
+    #
+    # @return [Hash]
+    #
+    def coverage_strategy
+      adapt_coverage_result
+      filter_coverage_result
+      result_with_not_loaded_files
+    end
+
+    #
     # Returns the result for the current coverage run, merging it across test suites
     # from cache using SimpleCov::ResultMerger if use_merging is activated (default)
     #
     def result
       return @result if result?
-
       # Collect our coverage result
-      if running
-        adapted_result = SimpleCov::ResultAdapter.call(Coverage.result)
 
-        @result = SimpleCov::Result.new add_not_loaded_files(adapted_result)
-      end
+      coverage_strategy if running
 
       # If we're using merging of results, store the current result
       # first (if there is one), then merge the results and return those
@@ -278,6 +315,8 @@ require "simplecov/configuration"
 SimpleCov.send :extend, SimpleCov::Configuration
 require "simplecov/exit_codes"
 require "simplecov/profiles"
+require "simplecov/supports/branch_support"
+require "simplecov/supports/source_file_support"
 require "simplecov/source_file"
 require "simplecov/file_list"
 require "simplecov/result"
@@ -296,6 +335,7 @@ require "simplecov/combiners/files_combiner"
 require "simplecov/combiners/lines_combiner"
 require "simplecov/results_combiner"
 require "simplecov/classifiers/branches_classifier"
+require "simplecov/coverage_result_filter"
 
 # Load default config
 require "simplecov/defaults" unless ENV["SIMPLECOV_NO_DEFAULTS"]
