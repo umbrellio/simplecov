@@ -18,10 +18,6 @@ module SimpleCov
         @second_coverage = second_coverage
       end
 
-      def combine
-        puts "override this method"
-      end
-
     private
 
       def empty_coverage?
