@@ -61,7 +61,7 @@ module SimpleCov
     # Return total count of branches in all files
     def total_branches
       return 0 if empty?
-      map { |file| file.relevant_branches.count }.inject(:+)
+      map { |file| file.total_branches.count }.inject(:+)
     end
 
     # Return total count of covered branches
