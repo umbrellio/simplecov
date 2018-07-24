@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require "helper"
-require "simplecov/classifiers/lines_classifier"
+require "simplecov/lines_classifier"
 
-describe SimpleCov::Classifiers::LinesClassifier do
+describe SimpleCov::LinesClassifier do
   describe "#classify" do
     describe "relevant lines" do
       it "determines code as relevant" do
@@ -102,13 +102,13 @@ describe SimpleCov::Classifiers::LinesClassifier do
 
   RSpec::Matchers.define :be_relevant do
     match do |actual|
-      actual == SimpleCov::Classifiers::LinesClassifier::RELEVANT
+      actual == SimpleCov::LinesClassifier::RELEVANT
     end
   end
 
   RSpec::Matchers.define :be_irrelevant do
     match do |actual|
-      actual == SimpleCov::Classifiers::LinesClassifier::NOT_RELEVANT
+      actual == SimpleCov::LinesClassifier::NOT_RELEVANT
     end
   end
 end

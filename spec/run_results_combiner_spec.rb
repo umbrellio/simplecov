@@ -3,7 +3,7 @@
 require "helper"
 
 if SimpleCov.usable?
-  describe SimpleCov::ResultsCombiner do
+  describe SimpleCov::RunResultsCombiner do
     describe "with two faked coverage resultsets" do
       before do
         @resultset1 = {
@@ -42,7 +42,7 @@ if SimpleCov.usable?
 
       context "a merge" do
         subject do
-          SimpleCov::ResultsCombiner.combine!(@resultset1, @resultset2, @resultset3)
+          SimpleCov::RunResultsCombiner.combine!(@resultset1, @resultset2, @resultset3)
         end
 
         it "has proper results for sample.rb" do
@@ -96,7 +96,7 @@ if SimpleCov.usable?
         source_fixture("sample.rb").freeze => {:lines => [1, nil, 1, 1, nil, nil, 1, 1, nil, nil]},
       }
 
-      merged_result = SimpleCov::ResultsCombiner.combine!(resultset1, resultset2)
+      merged_result = SimpleCov::RunResultsCombiner.combine!(resultset1, resultset2)
       expect(merged_result.keys).to eq(resultset1.keys)
       expect(merged_result.values.map(&:frozen?)).to eq([false, false])
 

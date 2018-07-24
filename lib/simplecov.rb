@@ -68,7 +68,7 @@ module SimpleCov
         result = result.dup
         Dir[tracked_files].each do |file|
           absolute = File.expand_path(file)
-          result[absolute] ||= CoverageClassifier.call(absolute)
+          result[absolute] ||= RunFileCoverage.start(absolute)
         end
       end
 
@@ -76,7 +76,7 @@ module SimpleCov
     end
 
     #
-    # Unite the result not matter what coverage type called
+    # Unite the result so it wouldn't matter what coverage type was called
     #
     # @return [Hash]
     #
@@ -86,13 +86,13 @@ module SimpleCov
 
     #
     # Filter coverage result
-    # The result before filter also have result of coverage for files
+    # The result before filter also has result of coverage for files
     # are not related to the project like loaded gems coverage.
     #
     # @return [Hash]
     #
-    def filter_coverage_result
-      @result = SimpleCov::CoverageResultFilter.call(@result)
+    def remove_useless_results
+      @result = SimpleCov::UselessResultsRemover.call(@result)
     end
 
     #
@@ -102,17 +102,17 @@ module SimpleCov
     # @return [Hash]
     #
     def result_with_not_loaded_files
-      @result = SimpleCov::Result.new add_not_loaded_files(@result)
+      @result = SimpleCov::Result.new(add_not_loaded_files(@result))
     end
 
     #
-    # Call steps of handling coverage result
+    # Call steps that handle process coverage result
     #
     # @return [Hash]
     #
-    def coverage_strategy
+    def process_coverage_result
       adapt_coverage_result
-      filter_coverage_result
+      remove_useless_results
       result_with_not_loaded_files
     end
 
@@ -124,7 +124,7 @@ module SimpleCov
       return @result if result?
       # Collect our coverage result
 
-      coverage_strategy if running
+      process_coverage_result if running
 
       # If we're using merging of results, store the current result
       # first (if there is one), then merge the results and return those
@@ -183,20 +183,6 @@ module SimpleCov
     def load_adapter(name)
       warn "#{Kernel.caller.first}: [DEPRECATION] #load_adapter is deprecated. Use #load_profile instead."
       load_profile(name)
-    end
-
-    #
-    # Trigger Coverage.start depends on given config
-    #
-    # With Positive branch it supports all coverage measurement types
-    # With Negative branch it supports only line coverage measurement type
-    #
-    def start_coverage_measurment
-      if measurement_targets
-        Coverage.start(:all)
-      else
-        Coverage.start
-      end
     end
 
     #
@@ -307,6 +293,22 @@ module SimpleCov
     def write_last_run(covered_percent)
       SimpleCov::LastRun.write(:result => {:covered_percent => covered_percent})
     end
+
+  private
+
+    #
+    # Trigger Coverage.start depends on given config use_branchable_report
+    #
+    # With Positive branch it supports all coverage measurement types
+    # With Negative branch it supports only line coverage measurement type
+    #
+    def start_coverage_measurment
+      if branchable_report
+        Coverage.start(:all)
+      else
+        Coverage.start
+      end
+    end
   end
 end
 
@@ -323,19 +325,19 @@ require "simplecov/result"
 require "simplecov/filter"
 require "simplecov/formatter"
 require "simplecov/last_run"
-require "simplecov/classifiers/lines_classifier"
+require "simplecov/lines_classifier"
 require "simplecov/result_merger"
 require "simplecov/command_guesser"
 require "simplecov/version"
-require "simplecov/coverage_classifier"
 require "simplecov/result_adapter"
 require "simplecov/combiners/base_combiner"
 require "simplecov/combiners/branches_combiner"
 require "simplecov/combiners/files_combiner"
 require "simplecov/combiners/lines_combiner"
-require "simplecov/results_combiner"
-require "simplecov/classifiers/branches_classifier"
-require "simplecov/coverage_result_filter"
+require "simplecov/run_results_combiner"
+require "simplecov/branches_per_file"
+require "simplecov/useless_results_remover"
+require "simplecov/run_file_coverage"
 
 # Load default config
 require "simplecov/defaults" unless ENV["SIMPLECOV_NO_DEFAULTS"]

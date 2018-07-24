@@ -2,6 +2,9 @@
 
 module SimpleCov
   module Combiners
+    #
+    # Combine different branche coverage results on single file
+    #
     class BranchesCombiner < BaseCombiner
       #
       # Return merged branches or the existed branche if other is missing
@@ -14,7 +17,6 @@ module SimpleCov
       end
 
       #
-      # Logic here is to simple
       # Branches inside files are always same if they exists, the difference only in coverage count
       # Branch coverage report for any conditional case is build from hash it's key is condition and
       # body also hash with hashes inside << keys from condition and value is coverage rate >>

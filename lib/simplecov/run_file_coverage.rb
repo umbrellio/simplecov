@@ -1,0 +1,38 @@
+# frozen_string_literal: true
+
+module SimpleCov
+  #
+  # Get certain file coverage report by apply
+  # - Lines report we call LinesClassifier
+  # - Branches report we call BranchesReportByFile
+  #
+  #
+  class RunFileCoverage
+    def self.start(*args)
+      new(*args).call
+    end
+
+    def initialize(absolute_path)
+      @lines             = File.foreach(absolute_path)
+      @absolute_path     = absolute_path
+      @classified_result = {}
+    end
+
+    #
+    # Simulate normal file coverage report on
+    # ruby 2.5 and return similar hash with lines and branches keys
+    #
+    # @return [Hash]
+    #
+    def call
+      classified_result[:lines]    = SimpleCov::LinesClassifier.new.classify(lines)
+      classified_result[:branches] = SimpleCov::BranchesPerFile.start(absolute_path)
+      classified_result
+    end
+
+  private
+
+    attr_reader :lines, :absolute_path
+    attr_accessor :classified_result
+  end
+end

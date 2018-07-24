@@ -2,6 +2,9 @@
 
 module SimpleCov
   module Combiners
+    #
+    # Combine two different lines coverage results on same file
+    #
     class LinesCombiner < BaseCombiner
       def combine
         return existed_coverage unless empty_coverage?
@@ -20,6 +23,7 @@ module SimpleCov
       #
       # @param [Integer || nil] first_val
       # @param [Integer || nil] second_val
+      #
       # Logic:
       #
       # => nil + 0 = nil
