@@ -6,13 +6,6 @@ module SimpleCov
       ###
       ## Related to source file lines statistics
       ###
-      def build_lines
-        coverage_exceeding_source_warn if coverage[:lines].size > src.size
-        lines = src.map.with_index(1) do |src, i|
-          SimpleCov::SourceFile::Line.new(src, i, coverage[:lines][i - 1])
-        end
-        process_skipped_lines(lines)
-      end
 
       # Returns all covered lines as SimpleCov::SourceFile::Line
       def covered_lines
@@ -46,7 +39,7 @@ module SimpleCov
       def process_skipped_lines(lines)
         skipping = false
         lines.each do |line|
-          if SimpleCov::Classifiers::LinesClassifier.no_cov_line?(line.src)
+          if SimpleCov::LinesClassifier.no_cov_line?(line.src)
             skipping = !skipping
             line.skipped!
           elsif skipping
@@ -148,6 +141,18 @@ module SimpleCov
       end
 
       #
+      # Check if any branches missing on given line number
+      #
+      # @param [Integer] line_number
+      #
+      # @return [Boolean]
+      #
+      def line_with_missed_branch?(line_number)
+        return unless branchable_line?(line_number)
+        branches_report[line_number].select { |count, _sign| count.zero? }.any?
+      end
+
+      #
       # Build full branches report
       # Root branches represent the wrapper of all condition state that
       # have inside the branches
@@ -156,9 +161,7 @@ module SimpleCov
       #
       def build_branches_report
         root_branches.each_with_object({}) do |root_branch, statistics|
-          statistics.merge!(
-            condition_report(root_branch)
-          )
+          statistics.merge!(condition_report(root_branch))
         end
       end
 

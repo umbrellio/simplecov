@@ -4,7 +4,7 @@ module SimpleCov
   #
   # Selection the files that related to working scope directory of SimpleCov
   #
-  module CoverageResultFilter
+  module UselessResultsRemover
     ROOT_REGX = /\A#{Regexp.escape(SimpleCov.root + File::SEPARATOR)}/io
 
     def self.call(coverage_result)

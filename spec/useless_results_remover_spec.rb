@@ -3,7 +3,7 @@
 require "helper"
 
 if SimpleCov.usable?
-  describe SimpleCov::CoverageResultFilter do
+  describe SimpleCov::UselessResultsRemover do
     let(:gem_file_path) { "usr/bin/lib/2.5.0/gems/sample-gem/sample.rb" }
 
     let(:result_set) do
@@ -20,7 +20,7 @@ if SimpleCov.usable?
     end
 
     subject do
-      SimpleCov::CoverageResultFilter.call(result_set)
+      SimpleCov::UselessResultsRemover.call(result_set)
     end
 
     it "Result ignore gem file path from result set" do

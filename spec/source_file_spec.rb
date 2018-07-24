@@ -87,6 +87,10 @@ if SimpleCov.usable?
       it "Has coverage report" do
         expect(subject.branches_report).to eq(17 => [[3, "+"]], 19 => [[0, "-"]], 29 => [[3, "+"]], 31 => [[0, "-"]])
       end
+
+      it "Hash line 31 with missed branches" do
+        expect(subject.line_with_missed_branch?(31)).to eq(true)
+      end
     end
 
     context "simulating potential Ruby 1.9 defect -- see Issue #56" do

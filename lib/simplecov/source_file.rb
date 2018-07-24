@@ -195,6 +195,14 @@ module SimpleCov
     end
     alias source_lines lines
 
+    def build_lines
+      coverage_exceeding_source_warn if coverage[:lines].size > src.size
+      lines = src.map.with_index(1) do |src, i|
+        SimpleCov::SourceFile::Line.new(src, i, coverage[:lines][i - 1])
+      end
+      process_skipped_lines(lines)
+    end
+
     #
     # Return all the branches inside current source file
     #

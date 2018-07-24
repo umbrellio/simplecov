@@ -10,7 +10,7 @@ require "simplecov/formatter/multi_formatter"
 #
 module SimpleCov
   module Configuration # rubocop:disable ModuleLength
-    attr_writer :filters, :groups, :formatter, :measurement_targets
+    attr_writer :filters, :groups, :formatter, :branchable_report
 
     #
     # The root for the project. This defaults to the
@@ -75,8 +75,8 @@ module SimpleCov
     # Details covers all measurement types of only lines
     # this feature only supported with ruby version >= 2.5
     #
-    def measurement_targets
-      @measurement_targets ||= false
+    def branchable_report
+      @branchable_report ||= false
     end
 
     # The name of the command (a.k.a. Test Suite) currently running. Used for result
@@ -301,8 +301,8 @@ module SimpleCov
     #
     # @param [Boolean] target
     #
-    def use_measurement_targets(target = false)
-      @measurement_targets = target
+    def use_branchable_report(target = false)
+      @branchable_report = target
     end
 
   private
