@@ -71,9 +71,10 @@ module SimpleCov
       @filters ||= []
     end
 
-    #
-    # Details covers all measurement types of only lines
-    # this feature only supported with ruby version >= 2.5
+    # Coverage results report behaviour definition.
+    # False => Give default behaviour, only lines measurement report on the coverage results.
+    # True  => Give all available kind of measurement report lines, branches and methods coverage results.
+    # This feature is only supported with ruby version >= 2.5
     #
     def branchable_report
       @branchable_report ||= false

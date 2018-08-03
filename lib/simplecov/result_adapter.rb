@@ -2,8 +2,7 @@
 
 module SimpleCov
   #
-  # Resposible of adapting the format of the coverage result weather it's default or with statistics
-  #
+  # Responsible for adapting the format of the coverage result whether it's default or with statistics
   #
   class ResultAdapter
     attr_reader :result
@@ -17,7 +16,7 @@ module SimpleCov
     end
 
     def adapt
-      return result unless result
+      return unless result
 
       result.each_with_object({}) do |(file_name, cover_statistic), adapted_result|
         if cover_statistic.is_a?(Array)

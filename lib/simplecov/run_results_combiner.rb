@@ -4,7 +4,8 @@ module SimpleCov
   # There might be reports from different kinds of tests,
   # e.g. RSpec and Cucumber. We need to combine their results
   # into unified one. This class does that.
-  # To unite results on per file basis, it leverages
+  # To unite the results on file basis, it leverages
+  # the combiners of lines and branches inside each file within given results.
   class RunResultsCombiner
     attr_reader :results
 
@@ -17,7 +18,7 @@ module SimpleCov
     end
 
     #
-    # Combine process explination
+    # Combine process explanation
     # => ResultCombiner: define all present files between results and start combine on file level.
     # ==> FileCombiner: collect result of next combine levels lines and branches.
     # ===> LinesCombiner: combine lines results.
