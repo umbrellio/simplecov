@@ -60,63 +60,6 @@ module SimpleCov
     end
 
     #
-    # Finds files that were to be tracked but were not loaded and initializes
-    # the line-by-line coverage to zero (if relevant) or nil (comments / whitespace etc).
-    #
-    def add_not_loaded_files(result)
-      if tracked_files
-        result = result.dup
-        Dir[tracked_files].each do |file|
-          absolute = File.expand_path(file)
-          result[absolute] ||= RunFileCoverage.start(absolute)
-        end
-      end
-
-      result
-    end
-
-    #
-    # Unite the result so it wouldn't matter what coverage type was called
-    #
-    # @return [Hash]
-    #
-    def adapt_coverage_result
-      @result = SimpleCov::ResultAdapter.call(Coverage.result)
-    end
-
-    #
-    # Filter coverage result
-    # The result before filter also has result of coverage for files
-    # are not related to the project like loaded gems coverage.
-    #
-    # @return [Hash]
-    #
-    def remove_useless_results
-      @result = SimpleCov::UselessResultsRemover.call(@result)
-    end
-
-    #
-    # Initialize result with files that are not included by coverage
-    # and added inside the config block
-    #
-    # @return [Hash]
-    #
-    def result_with_not_loaded_files
-      @result = SimpleCov::Result.new(add_not_loaded_files(@result))
-    end
-
-    #
-    # Call steps that handle process coverage result
-    #
-    # @return [Hash]
-    #
-    def process_coverage_result
-      adapt_coverage_result
-      remove_useless_results
-      result_with_not_loaded_files
-    end
-
-    #
     # Returns the result for the current coverage run, merging it across test suites
     # from cache using SimpleCov::ResultMerger if use_merging is activated (default)
     #
@@ -308,6 +251,63 @@ module SimpleCov
       else
         Coverage.start
       end
+    end
+
+    #
+    # Finds files that were to be tracked but were not loaded and initializes
+    # the line-by-line coverage to zero (if relevant) or nil (comments / whitespace etc).
+    #
+    def add_not_loaded_files(result)
+      if tracked_files
+        result = result.dup
+        Dir[tracked_files].each do |file|
+          absolute = File.expand_path(file)
+          result[absolute] ||= RunFileCoverage.start(absolute)
+        end
+      end
+
+      result
+    end
+
+    #
+    # Unite the result so it wouldn't matter what coverage type was called
+    #
+    # @return [Hash]
+    #
+    def adapt_coverage_result
+      @result = SimpleCov::ResultAdapter.call(Coverage.result)
+    end
+
+    #
+    # Filter coverage result
+    # The result before filter also has result of coverage for files
+    # are not related to the project like loaded gems coverage.
+    #
+    # @return [Hash]
+    #
+    def remove_useless_results
+      @result = SimpleCov::UselessResultsRemover.call(@result)
+    end
+
+    #
+    # Initialize result with files that are not included by coverage
+    # and added inside the config block
+    #
+    # @return [Hash]
+    #
+    def result_with_not_loaded_files
+      @result = SimpleCov::Result.new(add_not_loaded_files(@result))
+    end
+
+    #
+    # Call steps that handle process coverage result
+    #
+    # @return [Hash]
+    #
+    def process_coverage_result
+      adapt_coverage_result
+      remove_useless_results
+      result_with_not_loaded_files
     end
   end
 end

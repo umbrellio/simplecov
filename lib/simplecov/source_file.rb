@@ -75,7 +75,7 @@ module SimpleCov
 
     #
     # Representing single branch that been detected in coverage report
-    # Give us support methods that handle neede calculations
+    # Give us support methods that handle needed calculations
     class Branch
       include SimpleCov::Supports::BranchSupport
 

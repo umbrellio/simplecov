@@ -5,7 +5,7 @@ require "pry"
 
 if SimpleCov.usable?
   describe SimpleCov::SourceFile::Branch do
-    let(:resutls) do
+    let(:results) do
       [[:if, 0, 1, 4, 10, 4],
        [:then, 1, 2, 6, 8, 4],
        [:else, 2, 2, 6, 8, 4],
@@ -14,15 +14,15 @@ if SimpleCov.usable?
     end
 
     let(:root_branch) do
-      SimpleCov::SourceFile::Branch.new(*resutls[0], nil)
+      SimpleCov::SourceFile::Branch.new(*results[0], nil)
     end
 
     let(:positive_sub_branch) do
-      SimpleCov::SourceFile::Branch.new(*resutls[1], 0)
+      SimpleCov::SourceFile::Branch.new(*results[1], 0)
     end
 
     let(:negative_sub_branch) do
-      SimpleCov::SourceFile::Branch.new(*resutls[2], 0)
+      SimpleCov::SourceFile::Branch.new(*results[2], 0)
     end
 
     let(:branches) do
@@ -31,8 +31,8 @@ if SimpleCov.usable?
 
     let(:inline_branches) do
       [root_branch,
-       SimpleCov::SourceFile::Branch.new(*resutls[3], 0),
-       SimpleCov::SourceFile::Branch.new(*resutls[4], 0)]
+       SimpleCov::SourceFile::Branch.new(*results[3], 0),
+       SimpleCov::SourceFile::Branch.new(*results[4], 0)]
     end
 
     context "A source branch if..else" do

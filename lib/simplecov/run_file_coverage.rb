@@ -2,10 +2,7 @@
 
 module SimpleCov
   #
-  # Get certain file coverage report by apply
-  # - Lines report we call LinesClassifier
-  # - Branches report we call BranchesReportByFile
-  #
+  # Responsible for producing file coverage metrics.
   #
   class RunFileCoverage
     def self.start(*args)
@@ -25,14 +22,13 @@ module SimpleCov
     # @return [Hash]
     #
     def call
-      classified_result[:lines]    = SimpleCov::LinesClassifier.new.classify(lines)
-      classified_result[:branches] = SimpleCov::BranchesPerFile.start(absolute_path)
-      classified_result
+      @classified_result[:lines]    = SimpleCov::LinesClassifier.new.classify(lines)
+      @classified_result[:branches] = SimpleCov::BranchesPerFile.start(absolute_path)
+      @classified_result
     end
 
   private
 
     attr_reader :lines, :absolute_path
-    attr_accessor :classified_result
   end
 end

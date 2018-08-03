@@ -3,8 +3,8 @@
 module SimpleCov
   module Combiners
     #
-    # Represents the base behavior or the combiner
-    # take two coverage statisitcs and combine them depends on the logic needed
+    # Represents the base behavior of the combiner.
+    # Take two coverage statistics and combine them depending on the logic needed.
     #
     class BaseCombiner
       attr_reader :first_coverage, :second_coverage

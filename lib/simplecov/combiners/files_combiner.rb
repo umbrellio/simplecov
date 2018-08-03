@@ -41,7 +41,7 @@ module SimpleCov
       # @return [Hash]
       #
       def combine_lines_coverage
-        combined_results[:lines] = SimpleCov::Combiners::LinesCombiner.combine!(
+        combined_results[:lines] = LinesCombiner.combine!(
           first_coverage[:lines],
           second_coverage[:lines]
         )
@@ -53,7 +53,7 @@ module SimpleCov
       # @return [Hash]
       #
       def combine_branches_coverage
-        combined_results[:branches] = SimpleCov::Combiners::BranchesCombiner.combine!(
+        combined_results[:branches] = BranchesCombiner.combine!(
           first_coverage[:branches],
           second_coverage[:branches]
         )
