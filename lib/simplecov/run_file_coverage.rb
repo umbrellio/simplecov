@@ -22,8 +22,8 @@ module SimpleCov
     # @return [Hash]
     #
     def call
-      @classified_result[:lines]    = SimpleCov::LinesClassifier.new.classify(lines)
-      @classified_result[:branches] = SimpleCov::BranchesPerFile.start(absolute_path)
+      @classified_result[:lines]    = LinesClassifier.new.classify(lines)
+      @classified_result[:branches] = BranchesPerFile.start(absolute_path)
       @classified_result
     end
 
