@@ -74,8 +74,8 @@ module SimpleCov
     end
 
     #
-    # Representing single branch that been detected in coverage report
-    # Give us support methods that handle needed calculations
+    # Representing single branch that has been detected in coverage report.
+    # Give us support methods that handle needed calculations.
     class Branch
       include SimpleCov::Supports::BranchSupport
 
@@ -89,12 +89,7 @@ module SimpleCov
       attr_accessor :coverage, :root_id
 
       def initialize(*branch_attrs, root_id)
-        @type       = branch_attrs[0]
-        @id         = branch_attrs[1]
-        @start_line = branch_attrs[2]
-        @start_col  = branch_attrs[3]
-        @end_line   = branch_attrs[4]
-        @end_col    = branch_attrs[5]
+        @type, @id, @start_line, @start_col, @end_col, @end_col = *branch_attrs
         @coverage   = 0
         @root_id    = root_id
       end
@@ -136,8 +131,8 @@ module SimpleCov
       end
 
       #
-      # Branch is positive or negative
-      # for when inside the case we always suppose that its positive branch
+      # Branch is positive or negative.
+      # For `case` conditions, `when` always supposed as positive branch.
       #
       # @return [Boolean]
       #
