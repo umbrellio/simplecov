@@ -61,7 +61,12 @@ module SimpleCov
 
     private
 
-      attr_reader :combined_results
+      # rubocop:disable TrivialAccessors
+      # attr_reader under private for ruby < 2.3.7 raise "warning: private attribute?"
+      def combined_results
+        @combined_results
+      end
+      # rubocop:enable TrivialAccessors
     end
   end
 end
