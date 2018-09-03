@@ -88,10 +88,15 @@ module SimpleCov
 
       attr_accessor :coverage, :root_id
 
-      def initialize(*branch_attrs, root_id)
-        @type, @id, @start_line, @start_col, @end_col, @end_col = *branch_attrs
+      def initialize(*args)
+        @type       = args[0]
+        @id         = args[1]
+        @start_line = args[2]
+        @start_col  = args[3]
+        @end_line   = args[4]
+        @end_col    = args[5]
+        @root_id    = args[6]
         @coverage   = 0
-        @root_id    = root_id
       end
 
       #
@@ -138,7 +143,7 @@ module SimpleCov
       #
       def positive?
         return true if type == :when
-        1 + root_id == id
+        1 + root_id.to_i == id
       end
 
       #
@@ -200,16 +205,13 @@ module SimpleCov
 
     #
     # Return all the branches inside current source file
-    #
-    # @return [Array]
-    #
     def branches
       @branches ||= build_branches
     end
 
     # Warning to identify condition from Issue #56
     def coverage_exceeding_source_warn
-      $stderr.puts "Warning: coverage data provided by Coverage [#{coverage.size}] exceeds number of lines in #{filename} [#{src.size}]"
+      $stderr.puts "Warning: coverage data provided by Coverage [#{coverage[:lines].size}] exceeds number of lines in #{filename} [#{src.size}]"
     end
 
     # Access SimpleCov::SourceFile::Line source lines by line number
@@ -258,18 +260,12 @@ module SimpleCov
 
     #
     # Return the relevant branches to source file
-    #
-    # @return [Array]
-    #
     def total_branches
       covered_branches + missed_branches
     end
 
     #
     # Return hash with key of line number and branch coverage count as value
-    #
-    # @return [Hash]
-    #
     def branches_report
       @branches_report ||= build_branches_report
     end

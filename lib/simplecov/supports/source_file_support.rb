@@ -70,14 +70,16 @@ module SimpleCov
       def branches_collection(given_branches, root_id = nil)
         @branches_collection ||= []
         given_branches.each do |branch_args, value|
-          branch = SimpleCov::SourceFile::Branch.new(*branch_args, root_id)
+          branch_args << root_id
+          branch = SourceFile::Branch.new(*branch_args)
+
           if value.is_a?(Integer)
             branch.coverage = value
-            @branches_collection << branch
           else
-            @branches_collection << branch
             branches_collection(value, branch.id)
           end
+
+          @branches_collection << branch
         end
         @branches_collection
       end
@@ -90,9 +92,9 @@ module SimpleCov
       # @return [Array]
       #
       def covered_branches
-        @covered_branches = root_branches.each_with_object([]) do |root_branch, relevant_branches|
-          relevant_branches << root_branch.sub_branches(branches).select(&:covered?)
-        end.flatten
+        @coverd_branches ||= root_branches.flat_map do |root_branch|
+          root_branch.sub_branches(branches).select(&:covered?)
+        end
       end
 
       #
@@ -101,9 +103,9 @@ module SimpleCov
       # @return [Array]
       #
       def missed_branches
-        @missed_branches = root_branches.each_with_object([]) do |root_branch, relevant_branches|
-          relevant_branches << root_branch.sub_branches(branches).select(&:missed?)
-        end.flatten
+        @missed_branches ||= root_branches.flat_map do |root_branch|
+          root_branch.sub_branches(branches).select(&:missed?)
+        end
       end
 
       #
