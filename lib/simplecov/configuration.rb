@@ -303,7 +303,7 @@ module SimpleCov
     # @param [Boolean] target
     #
     def use_branchable_report(target = false)
-      @branchable_report = target
+      @branchable_report = target_capability(target)
     end
 
   private
@@ -319,6 +319,24 @@ module SimpleCov
       else
         raise ArgumentError, "Please specify either a filter or a block to filter with"
       end
+    end
+
+    #
+    # Check if use_branchable_report is called on a ruby version
+    # which not supporting it (< 2.5).
+    # Shows notify meessage and continue the process as normal
+    # lines coverage report on not supportable versions.
+    #
+    def target_capability(target)
+      if Coverage.method(:start).arity.zero? && target
+        $stderr.printf <<-FYI
+          Branch coverage report available only on ruby >= 2.5,
+          please remove use_branchable_report option or set it to false.
+        FYI
+
+        return false
+      end
+      target
     end
   end
 end
