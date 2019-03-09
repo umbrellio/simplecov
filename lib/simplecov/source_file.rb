@@ -251,9 +251,8 @@ module SimpleCov
     end
 
     def branches_coverage_precent
-      return 100.0 if no_branches?
-
-      return 0.0 if covered_branches.length.zero?
+      return 100.0 if no_branches? && no_lines?
+      return 0.0 if covered_branches.size.zero?
 
       Float(covered_branches.size * 100.0 / total_branches.size.to_f)
     end
