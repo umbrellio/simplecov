@@ -234,7 +234,7 @@ module SimpleCov
         )
         SimpleCov::ExitCodes::MINIMUM_COVERAGE
       elsif (last_run = SimpleCov::LastRun.read)
-        coverage_diff = last_run["result"]["covered_percent"] - covered_percent
+        coverage_diff = last_run["result"]["covered_percent"] - result.covered_percent
         if coverage_diff > SimpleCov.maximum_coverage_drop
           $stderr.printf(
             "Coverage has dropped by %.2f%% since the last time (maximum allowed: %.2f%%).\n",
