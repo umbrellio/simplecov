@@ -20,29 +20,13 @@ module SimpleCov
       # @return [Hash]
       #
       def combine_methods
-        processed_first_coverage = process(first_coverage)
-        processed_second_coverage = process(second_coverage)
+        result_coverage = {}
 
-        processed_first_coverage.each_key do |method|
-          processed_first_coverage[method] += processed_second_coverage.fetch(method)
+        first_coverage.each_key do |method|
+          result_coverage[method] = first_coverage.fetch(method) + second_coverage.fetch(method)
         end
 
-        processed_first_coverage unless processed_first_coverage == {}
-      end
-
-      private
-
-      def process(coverage)
-        result = {}
-
-        # NOTE: move to serialization?
-        coverage.each do |key, value|
-          new_key = key.dup
-          new_key[0].sub!(/0x[0-9a-f]{16}/, "0x0000000000000000")
-          result[new_key] = value
-        end
-
-        result
+        result_coverage
       end
     end
   end

@@ -10,7 +10,7 @@ module SimpleCov
           serializable_file_data = {}
 
           file_data.each do |key, value|
-            serializable_file_data[key] = serialize_value(value)
+            serializable_file_data[key] = serialize_value(key, value)
           end
 
           coverage[file_path] = serializable_file_data
@@ -29,7 +29,8 @@ module SimpleCov
           parsed_file_data = {}
 
           file_data.each do |key, value|
-            parsed_file_data[key.to_sym] = deserialize_value(value)
+            key = key.to_sym
+            parsed_file_data[key] = deserialize_value(key, value)
           end
 
           coverage[file_name] = parsed_file_data
@@ -43,27 +44,66 @@ module SimpleCov
 
       private
 
-      def serialize_value(value)
-        case value
-        when Hash
-          value.map { |key, value| [key, serialize_value(value)] }
+      def serialize_value(key, value)
+        case key
+        when :branches
+          value.map { |k, v| [k, v.to_a] }
+        when :methods
+          value.map do |methods_data, coverage|
+            klass, *info = methods_data
+            serialized_klass = klass.to_s.sub(/0x[0-9a-f]{16}/, "0x0000000000000000")
+            serialized_methods_data = [serialized_klass, *info]
+            [serialized_methods_data, coverage]
+          end
+        else
+          value.to_a
+        end
+      end
+
+      def deserialize_value(key, value)
+        case key
+        when :branches
+          deserialize_branches(value)
+        when :methods
+          deserialize_methods(value)
         else
           value
         end
       end
 
-      def deserialize_value(value)
-        if value.is_a?(Array) && value.all? { |x| x.is_a?(Array) && x.size == 2 }
-          hash = {}
+      def deserialize_branches(value)
+        result = {}
 
-          value.each do |key, value|
-            hash[key] = deserialize_value(value)
+        value.each do |serialized_root, serialized_coverage_data|
+          root = deserialize_branch_info(serialized_root)
+          coverage_data = {}
+
+          serialized_coverage_data.each do |serialized_branch, coverage|
+            branch = deserialize_branch_info(serialized_branch)
+            coverage_data[branch] = coverage
           end
 
-          hash
-        else
-          value
+          result[root] = coverage_data
         end
+
+        result
+      end
+
+      def deserialize_branch_info(value)
+        type, *info = value
+        [type.to_sym, *info]
+      end
+
+      def deserialize_methods(value)
+        result = {}
+
+        value.each do |serialized_info, coverage|
+          klass, method_name, *info = serialized_info
+          info = [klass, method_name.to_sym, *info]
+          result[info] = coverage
+        end
+
+        result
       end
     end
   end
