@@ -79,24 +79,15 @@ module SimpleCov
     class Branch
       include SimpleCov::Supports::BranchSupport
 
-      attr_reader :type,
-                  :id,
-                  :start_line,
-                  :start_col,
-                  :end_line,
-                  :end_col
+      attr_reader :source_file, :root_id
+      attr_reader :type, :id, :start_line, :start_col, :end_line, :end_col
+      attr_accessor :coverage
 
-      attr_accessor :coverage, :root_id
-
-      def initialize(*args)
-        @type       = args[0]
-        @id         = args[1]
-        @start_line = args[2]
-        @start_col  = args[3]
-        @end_line   = args[4]
-        @end_col    = args[5]
-        @root_id    = args[6]
-        @coverage   = 0
+      def initialize(source_file, info, root_id)
+        @source_file = source_file
+        @type, @id, @start_line, @start_col, @end_line, @end_col = info
+        @root_id = root_id
+        @coverage = 0
       end
 
       #
@@ -105,7 +96,16 @@ module SimpleCov
       # @return [Boolean]
       #
       def covered?
-        coverage > 0
+        !skipped? && coverage.positive?
+      end
+
+      def skipped?
+        return @skipped if defined?(@skipped)
+        @skipped = lines.all?(&:skipped?)
+      end
+
+      def lines
+        @lines ||= source_file.lines[(start_line - 1)..(end_line - 1)]
       end
 
       #
@@ -114,7 +114,7 @@ module SimpleCov
       # @return [Boolean]
       #
       def missed?
-        coverage.zero?
+        !skipped? && coverage.zero?
       end
 
       #
@@ -166,18 +166,13 @@ module SimpleCov
     end
 
     class Method
-      attr_reader :coverage, :skipped, :lines, :klass, :method
+      attr_reader :source_file, :coverage
+      attr_reader :klass, :method, :start_line, :start_col, :end_line, :end_col
 
-      def self.build(source_file, info, coverage)
-        lines = source_file.lines[(info[2] - 1)...info[4]]
-        new(lines, info[0], info[1], coverage)
-      end
-
-      def initialize(lines, klass, method, coverage)
-        @klass = klass
-        @method = method
+      def initialize(source_file, info, coverage)
+        @source_file = source_file
+        @klass, @method, @start_line, @start_col, @end_line, @end_col = info
         @coverage = coverage
-        @lines = lines
       end
 
       def covered?
@@ -185,7 +180,12 @@ module SimpleCov
       end
 
       def skipped?
-        @skipped ||= lines.all?(&:skipped?)
+        return @skipped if defined?(@skipped)
+        @skipped = lines.all?(&:skipped?)
+      end
+
+      def lines
+        @lines ||= source_file.lines[(start_line - 1)..(end_line - 1)]
       end
 
       def to_s
@@ -275,7 +275,7 @@ module SimpleCov
     end
 
     def no_branches?
-      total_branches.length.zero?
+      total_branches.empty?
     end
 
     def branches_coverage_precent

@@ -70,8 +70,7 @@ module SimpleCov
       def branches_collection(given_branches, root_id = nil)
         @branches_collection ||= []
         given_branches.each do |branch_args, value|
-          branch_args += [root_id]
-          branch = SourceFile::Branch.new(*branch_args)
+          branch = SourceFile::Branch.new(self, branch_args, root_id)
 
           if value.is_a?(Integer)
             branch.coverage = value
@@ -237,7 +236,7 @@ module SimpleCov
 
       def build_methods
         coverage[:methods].to_a.map do |info, coverage|
-          SourceFile::Method.build(self, info, coverage)
+          SourceFile::Method.new(self, info, coverage)
         end
       end
     end

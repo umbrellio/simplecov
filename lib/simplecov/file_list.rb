@@ -64,6 +64,8 @@ module SimpleCov
       map { |file| file.total_branches.count }.inject(:+)
     end
 
+    alias relevant_branches total_branches
+
     # Return total count of covered branches
     def covered_branches
       return 0 if empty?
@@ -90,10 +92,6 @@ module SimpleCov
 
     def relevant_lines
       @relevant_lines ||= map(&:relevant_lines).sum
-    end
-
-    def relevant_branches
-      @relevant_branches ||= map { |f| f.total_branches.size }.sum
     end
 
     def covered_branches
