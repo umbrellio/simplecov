@@ -92,7 +92,7 @@ module SimpleCov
       # @return [Array]
       #
       def covered_branches
-        @coverd_branches ||= root_branches.flat_map do |root_branch|
+        @covered_branches ||= root_branches.flat_map do |root_branch|
           root_branch.sub_branches(branches).select(&:covered?)
         end
       end
@@ -215,6 +215,30 @@ module SimpleCov
           inline_report << branch.report
         end
         {root_branch.start_line => inline_result}
+      end
+
+      def methods
+        @methods ||= build_methods
+      end
+
+      def covered_methods
+        @covered_methods ||= methods.select(&:covered?)
+      end
+
+      def relevant_methods
+        @relevant_methods ||= methods.reject(&:skipped?)
+      end
+
+      def missed_methods
+        @missed_methods ||= relevant_methods - covered_methods
+      end
+
+      private
+
+      def build_methods
+        coverage[:methods].to_a.map do |info, coverage|
+          SourceFile::Method.build(self, info, coverage)
+        end
       end
     end
   end

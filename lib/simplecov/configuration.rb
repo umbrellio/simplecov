@@ -258,6 +258,14 @@ module SimpleCov
       @minimum_coverage_by_file ||= (coverage || 0).to_f.round(2)
     end
 
+    def minimum_method_coverage(coverage = nil)
+      @minimum_method_coverage ||= (coverage || 0).to_f.round(2)
+    end
+
+    def minimum_branch_coverage(coverage = nil)
+      @minimum_branch_coverage ||= (coverage || 0).to_f.round(2)
+    end
+
     #
     # Refuses any coverage drop. That is, coverage is only allowed to increase.
     # SimpleCov will return non-zero if the coverage decreases.

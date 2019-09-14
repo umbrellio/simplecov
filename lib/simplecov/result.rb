@@ -22,6 +22,10 @@ module SimpleCov
 
     def_delegators :files, :covered_percent, :covered_percentages, :least_covered_file, :covered_strength, :covered_lines, :missed_lines, :total_branches, :covered_branches, :missed_branches
     def_delegator :files, :lines_of_code, :total_lines
+    def_delegators :files, :covered_methods, :relevant_methods, :covered_methods_percent
+    def_delegators :files, :relevant_lines, :relevant_branches, :covered_branches_percent
+
+    alias covered_lines_percent covered_percent
 
     # Initialize a new SimpleCov::Result from given Coverage.result (a Hash of filenames each containing an array of
     # coverage data)

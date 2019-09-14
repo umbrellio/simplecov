@@ -165,6 +165,34 @@ module SimpleCov
       end
     end
 
+    class Method
+      attr_reader :coverage, :skipped, :lines, :klass, :method
+
+      def self.build(source_file, info, coverage)
+        lines = source_file.lines[(info[2] - 1)...info[4]]
+        new(lines, info[0], info[1], coverage)
+      end
+
+      def initialize(lines, klass, method, coverage)
+        @klass = klass
+        @method = method
+        @coverage = coverage
+        @lines = lines
+      end
+
+      def covered?
+        !skipped? && coverage.positive?
+      end
+
+      def skipped?
+        @skipped ||= lines.all?(&:skipped?)
+      end
+
+      def to_s
+        "#{klass}##{method}"
+      end
+    end
+
     # The full path to this source file (e.g. /User/colszowka/projects/simplecov/lib/simplecov/source_file.rb)
     attr_reader :filename
     # The array of coverage data received from the Coverage.result

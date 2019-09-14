@@ -75,5 +75,33 @@ module SimpleCov
       return 0 if empty?
       map { |file| file.missed_branches.count }.inject(:+)
     end
+
+    def covered_methods
+      @covered_methods ||= map { |f| f.covered_methods.size }.sum
+    end
+
+    def relevant_methods
+      @relevant_methods ||= map { |f| f.relevant_methods.size }.sum
+    end
+
+    def covered_methods_percent
+      covered_methods * 100.0 / relevant_methods.to_f
+    end
+
+    def relevant_lines
+      @relevant_lines ||= map(&:relevant_lines).sum
+    end
+
+    def relevant_branches
+      @relevant_branches ||= map { |f| f.total_branches.size }.sum
+    end
+
+    def covered_branches
+      @covered_branches ||= map { |f| f.covered_branches.size }.sum
+    end
+
+    def covered_branches_percent
+      covered_branches * 100.0 / relevant_branches.to_f
+    end
   end
 end
