@@ -61,41 +61,20 @@ module SimpleCov
 
     # Returns a hash representation of this Result that can be used for marshalling it into JSON
     def to_hash
-      {command_name => {"coverage" => coverage, "timestamp" => created_at.to_i}}
+      SimpleCov::ResultSerialization.serialize(self)
     end
 
     # Loads a SimpleCov::Result#to_hash dump
     def self.from_hash(hash)
-      command_name, data = hash.first
-
-      result = SimpleCov::Result.new(
-        symbolize_names_of_coverage_results(data["coverage"])
-      )
-
-      result.command_name = command_name
-      result.created_at = Time.at(data["timestamp"])
-      result
+      SimpleCov::ResultSerialization.deserialize(hash)
     end
-
-    # Manage symbolize the keys of coverage hash.
-    # JSON.parse gives coverage hash with stringified keys what breaks some logics
-    # inside the process that expects them as symboles.
-    #
-    # @return [Hash]
-    def self.symbolize_names_of_coverage_results(coverage_data)
-      coverage_data.each_with_object({}) do |(file_name, file_coverage_result), coverage_results|
-        coverage_results[file_name] = file_coverage_result.each_with_object({}) do |(k, v), cov_elem|
-          cov_elem[k.to_sym] = v
-        end
-      end
-    end
-
-  private
 
     def coverage
       keys = original_result.keys & filenames
       Hash[keys.zip(original_result.values_at(*keys))]
     end
+
+    private
 
     # Applies all configured SimpleCov filters on this result's source files
     def filter!
