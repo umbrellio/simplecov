@@ -46,7 +46,7 @@ module SimpleCov
       def serialize_value(value)
         case value
         when Hash
-          value.map { |k, v| [serialize_value(k), serialize_value(v)] }
+          value.map { |key, value| [key, serialize_value(value)] }
         else
           value
         end

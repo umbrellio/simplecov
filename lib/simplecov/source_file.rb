@@ -89,7 +89,7 @@ module SimpleCov
       attr_accessor :coverage, :root_id
 
       def initialize(*args)
-        @type       = args[0]
+        @type       = args[0].to_sym # NOTE: move to deserialization?
         @id         = args[1]
         @start_line = args[2]
         @start_col  = args[3]

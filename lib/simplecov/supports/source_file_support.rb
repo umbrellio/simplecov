@@ -70,7 +70,7 @@ module SimpleCov
       def branches_collection(given_branches, root_id = nil)
         @branches_collection ||= []
         given_branches.each do |branch_args, value|
-          branch_args << root_id
+          branch_args += [root_id]
           branch = SourceFile::Branch.new(*branch_args)
 
           if value.is_a?(Integer)

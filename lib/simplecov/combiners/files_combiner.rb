@@ -29,8 +29,8 @@ module SimpleCov
         return existed_coverage unless empty_coverage?
 
         combine_lines_coverage
-
         combine_branches_coverage
+        combine_methods_coverage
 
         combined_results
       end
@@ -56,6 +56,18 @@ module SimpleCov
         combined_results[:branches] = BranchesCombiner.combine!(
           first_coverage[:branches],
           second_coverage[:branches]
+        )
+      end
+
+      #
+      # Merge combined methods coverage results inside total results hash
+      #
+      # @return [Hash]
+      #
+      def combine_methods_coverage
+        combined_results[:methods] = MethodsCombiner.combine!(
+          first_coverage[:methods],
+          second_coverage[:methods]
         )
       end
 
