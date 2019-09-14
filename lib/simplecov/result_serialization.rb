@@ -51,7 +51,7 @@ module SimpleCov
         when :methods
           value.map do |methods_data, coverage|
             klass, *info = methods_data
-            # Replace all memory addresses since they are inconsistent between test runs
+            # Replace all memory addresses with 0 since they are inconsistent between test runs
             serialized_klass = klass.to_s.sub(/0x[0-9a-f]{16}/, "0x0000000000000000")
             serialized_methods_data = [serialized_klass, *info]
             [serialized_methods_data, coverage]
@@ -96,12 +96,13 @@ module SimpleCov
       end
 
       def deserialize_methods(value)
-        result = {}
+        result = Hash.new { |hash, key| hash[key] = 0 }
 
         value.each do |serialized_info, coverage|
           klass, method_name, *info = serialized_info
           info = [klass, method_name.to_sym, *info]
-          result[info] = coverage
+          # Info keys might be non-unique since we replace memory addresses with 0
+          result[info] += coverage
         end
 
         result
