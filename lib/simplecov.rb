@@ -182,7 +182,7 @@ module SimpleCov
 
       result_exit_status = result_exit_status(result)
       if result_exit_status == SimpleCov::ExitCodes::SUCCESS # No result errors
-        write_last_run(result.covered_percent)
+        write_last_run(result.covered_percent.round(2))
       end
       final_result_process? ? result_exit_status : SimpleCov::ExitCodes::SUCCESS
     end
@@ -191,11 +191,13 @@ module SimpleCov
     #
     # rubocop:disable all
     def result_exit_status(result)
+      covered_percent = result.covered_percent.round(2)
       covered_percentages = result.covered_percentages.map { |percentage| percentage.round(2) }
-      if result.covered_percent < SimpleCov.minimum_coverage
+
+      if covered_percent < SimpleCov.minimum_coverage
         $stderr.printf(
           "Line coverage (%.2f%%) is below the expected minimum coverage (%.2f%%).\n",
-          result.covered_percent, SimpleCov.minimum_coverage
+          covered_percent, SimpleCov.minimum_coverage
         )
         SimpleCov::ExitCodes::MINIMUM_COVERAGE
       elsif result.covered_methods_percent < SimpleCov.minimum_method_coverage
@@ -217,7 +219,7 @@ module SimpleCov
         )
         SimpleCov::ExitCodes::MINIMUM_COVERAGE
       elsif (last_run = SimpleCov::LastRun.read)
-        coverage_diff = last_run["result"]["covered_percent"] - result.covered_percent
+        coverage_diff = last_run["result"]["covered_percent"] - covered_percent
         if coverage_diff > SimpleCov.maximum_coverage_drop
           $stderr.printf(
             "Coverage has dropped by %.2f%% since the last time (maximum allowed: %.2f%%).\n",
