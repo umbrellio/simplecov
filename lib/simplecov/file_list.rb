@@ -55,14 +55,16 @@ module SimpleCov
     end
 
     # Return total count of all branches in all files
-    def total_branches
-      map { |file| file.all_branches.count }.sum
-    end
+    # def total_branches
+    #   map { |file| file.relevant_branches.count }.sum
+    # end
 
     # Return total count of relevent branches in all files
     def relevant_branches
       map { |file| file.relevant_branches.count }.sum
     end
+
+    alias total_branches relevant_branches
 
     # Return total count of covered branches
     def covered_branches

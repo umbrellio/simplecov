@@ -265,6 +265,8 @@ module SimpleCov
       covered_branches + missed_branches
     end
 
+    alias total_branches relevant_branches # TODO: fix simplecov-html and remove
+
     # Return hash with key of line number and branch coverage count as value
     def branches_report
       @branches_report ||= build_branches_report
