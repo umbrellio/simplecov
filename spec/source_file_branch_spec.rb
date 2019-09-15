@@ -5,10 +5,10 @@ require "helper"
 describe SimpleCov::SourceFile::Branch do
   let(:results) do
     [[:if, 0, 1, 4, 10, 4],
-      [:then, 1, 2, 6, 8, 4],
-      [:else, 2, 2, 6, 8, 4],
-      [:then, 1, 1, 6, 9, 5],
-      [:else, 2, 1, 6, 8, 4]]
+     [:then, 1, 2, 6, 8, 4],
+     [:else, 2, 2, 6, 8, 4],
+     [:then, 1, 1, 6, 9, 5],
+     [:else, 2, 1, 6, 8, 4]]
   end
 
   let(:root_branch) do
@@ -29,8 +29,8 @@ describe SimpleCov::SourceFile::Branch do
 
   let(:inline_branches) do
     [root_branch,
-      SimpleCov::SourceFile::Branch.new(*(results[3] + [0])),
-      SimpleCov::SourceFile::Branch.new(*(results[4] + [0]))]
+     SimpleCov::SourceFile::Branch.new(*(results[3] + [0])),
+     SimpleCov::SourceFile::Branch.new(*(results[4] + [0]))]
   end
 
   context "A source branch if..else" do
@@ -53,7 +53,7 @@ describe SimpleCov::SourceFile::Branch do
 
     it "Return both sub branches of root branch" do
       expect(root_branch.sub_branches(branches).count).to eq(2)
-      expect(root_branch.sub_branches(branches).map(&:type)).to eq([:then, :else])
+      expect(root_branch.sub_branches(branches).map(&:type)).to eq(%i[then else])
     end
 
     it "Detects the if inline branch given" do
@@ -69,10 +69,10 @@ describe SimpleCov::SourceFile::Branch do
   context "A source branch case..when..else" do
     let(:results) do
       [[:case, 0, 1, 4, 10, 4],
-        [:when, 1, 2, 6, 8, 4],
-        [:when, 2, 3, 8, 10, 4],
-        [:else, 0, 1, 4, 10, 4],
-        [:else, 3, 4, 10, 12, 4]]
+       [:when, 1, 2, 6, 8, 4],
+       [:when, 2, 3, 8, 10, 4],
+       [:else, 0, 1, 4, 10, 4],
+       [:else, 3, 4, 10, 12, 4]]
     end
 
     let(:case_branch) do
@@ -81,16 +81,16 @@ describe SimpleCov::SourceFile::Branch do
 
     let(:branches_without_else) do
       [case_branch,
-        SimpleCov::SourceFile::Branch.new(*(results[1] + [0])),
-        SimpleCov::SourceFile::Branch.new(*(results[2] + [0])),
-        SimpleCov::SourceFile::Branch.new(*(results[3] + [0]))]
+       SimpleCov::SourceFile::Branch.new(*(results[1] + [0])),
+       SimpleCov::SourceFile::Branch.new(*(results[2] + [0])),
+       SimpleCov::SourceFile::Branch.new(*(results[3] + [0]))]
     end
 
     let(:branches_with_else) do
       [case_branch,
-        SimpleCov::SourceFile::Branch.new(*(results[1] + [0])),
-        SimpleCov::SourceFile::Branch.new(*(results[2] + [0])),
-        SimpleCov::SourceFile::Branch.new(*(results[4] + [0]))]
+       SimpleCov::SourceFile::Branch.new(*(results[1] + [0])),
+       SimpleCov::SourceFile::Branch.new(*(results[2] + [0])),
+       SimpleCov::SourceFile::Branch.new(*(results[4] + [0]))]
     end
 
     it "When branche badge is positive" do
@@ -99,12 +99,12 @@ describe SimpleCov::SourceFile::Branch do
 
     it "Has right `case` sub branches which having else inside" do
       expect(case_branch.sub_branches(branches_with_else).count).to eq(3)
-      expect(case_branch.sub_branches(branches_with_else).map(&:type)).to eq([:when, :when, :else])
+      expect(case_branch.sub_branches(branches_with_else).map(&:type)).to eq(%i[when when else])
     end
 
     it "Has right `case` sub branches which does not have else inside" do
       expect(case_branch.sub_branches(branches_without_else).count).to eq(2)
-      expect(case_branch.sub_branches(branches_without_else).map(&:type)).to eq([:when, :when])
+      expect(case_branch.sub_branches(branches_without_else).map(&:type)).to eq(%i[when when])
     end
 
     it "Has correct branch report (`when` always positive)" do

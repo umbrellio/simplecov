@@ -6,26 +6,22 @@ module SimpleCov
   class FileList < Array
     # Returns the count of lines that have coverage
     def covered_lines
-      return 0.0 if empty?
-      map { |f| f.covered_lines.count }.inject(:+)
+      map { |f| f.covered_lines.count }.sum
     end
 
     # Returns the count of lines that have been missed
     def missed_lines
-      return 0.0 if empty?
-      map { |f| f.missed_lines.count }.inject(:+)
+      map { |f| f.missed_lines.count }.sum
     end
 
     # Returns the count of lines that are not relevant for coverage
     def never_lines
-      return 0.0 if empty?
-      map { |f| f.never_lines.count }.inject(:+)
+      map { |f| f.never_lines.count }.sum
     end
 
     # Returns the count of skipped lines
     def skipped_lines
-      return 0.0 if empty?
-      map { |f| f.skipped_lines.count }.inject(:+)
+      map { |f| f.skipped_lines.count }.sum
     end
 
     # Computes the coverage based upon lines covered and lines missed for each file
@@ -55,35 +51,32 @@ module SimpleCov
     # @return [Float]
     def covered_strength
       return 0.0 if empty? || lines_of_code.zero?
-      Float(map { |f| f.covered_strength * f.lines_of_code }.inject(:+) / lines_of_code)
+      Float(map { |f| f.covered_strength * f.lines_of_code }.sum / lines_of_code)
     end
 
     # Return total count of branches in all files
     def total_branches
-      return 0 if empty?
-      map { |file| file.total_branches.count }.inject(:+)
+      map { |file| file.total_branches.count }.sum
     end
 
     alias relevant_branches total_branches
 
     # Return total count of covered branches
     def covered_branches
-      return 0 if empty?
-      map { |file| file.covered_branches.count }.inject(:+)
+      map { |file| file.covered_branches.count }.sum
     end
 
     # Return total count of covered branches
     def missed_branches
-      return 0 if empty?
-      map { |file| file.missed_branches.count }.inject(:+)
+      map { |file| file.missed_branches.count }.sum
     end
 
     def covered_methods
-      @covered_methods ||= map { |f| f.covered_methods.size }.sum
+      map { |file| file.covered_methods.count }.sum
     end
 
     def relevant_methods
-      @relevant_methods ||= map { |f| f.relevant_methods.size }.sum
+      map { |file| file.relevant_methods.count }.sum
     end
 
     def covered_methods_percent
@@ -91,11 +84,7 @@ module SimpleCov
     end
 
     def relevant_lines
-      @relevant_lines ||= map(&:relevant_lines).sum
-    end
-
-    def covered_branches
-      @covered_branches ||= map { |f| f.covered_branches.size }.sum
+      map(&:relevant_lines).sum
     end
 
     def covered_branches_percent

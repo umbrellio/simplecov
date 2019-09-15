@@ -2,7 +2,7 @@
 
 module SimpleCov
   module Supports
-    module SourceFileSupport
+    module SourceFileSupport # rubocop:disable ModuleLength
       ###
       ## Related to source file lines statistics
       ###
@@ -232,7 +232,7 @@ module SimpleCov
         @missed_methods ||= relevant_methods - covered_methods
       end
 
-      private
+    private
 
       def build_methods
         coverage[:methods].to_a.map do |info, coverage|

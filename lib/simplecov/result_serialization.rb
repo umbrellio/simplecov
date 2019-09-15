@@ -16,8 +16,8 @@ module SimpleCov
           coverage[file_path] = serializable_file_data
         end
 
-        data = { "coverage" => coverage, "timestamp" => result.created_at.to_i }
-        { result.command_name => data }
+        data = {"coverage" => coverage, "timestamp" => result.created_at.to_i}
+        {result.command_name => data}
       end
 
       def deserialize(hash)
@@ -42,7 +42,7 @@ module SimpleCov
         result
       end
 
-      private
+    private
 
       def serialize_value(key, value)
         case key

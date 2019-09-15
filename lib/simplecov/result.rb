@@ -78,7 +78,7 @@ module SimpleCov
       Hash[keys.zip(original_result.values_at(*keys))]
     end
 
-    private
+  private
 
     # Applies all configured SimpleCov filters on this result's source files
     def filter!

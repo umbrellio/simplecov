@@ -4,6 +4,7 @@ AllCops:
     - 'tmp/**/*'
     - 'vendor/bundle/**/*'
     - 'vendor/bundle/**/.*'
+  DisplayCopNames: true
   TargetRubyVersion: 2.4
 
 Bundler/OrderedGems:
