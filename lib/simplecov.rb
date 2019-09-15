@@ -3,7 +3,7 @@
 require "English"
 
 #
-# Code coverage for ruby 1.9. Please check out README for a full introduction.
+# Code coverage for ruby. Please check out README for a full introduction.
 #
 # Coverage may be inaccurate under JRUBY.
 if defined?(JRUBY_VERSION) && defined?(JRuby)
@@ -44,19 +44,13 @@ module SimpleCov
     # Please check out the RDoc for SimpleCov::Configuration to find about available config options
     #
     def start(profile = nil, &block)
-      if SimpleCov.usable?
-        load_profile(profile) if profile
-        configure(&block) if block_given?
-        @result = nil
-        self.running = true
-        self.pid = Process.pid
-
-        start_coverage_measurment
-      else
-        warn "WARNING: SimpleCov is activated, but you're not running Ruby 1.9+ - no coverage analysis will happen"
-        warn "Starting with SimpleCov 1.0.0, even no-op compatibility with Ruby <= 1.8 will be entirely dropped."
-        false
-      end
+      require "coverage"
+      load_profile(profile) if profile
+      configure(&block) if block_given?
+      @result = nil
+      self.running = true
+      self.pid = Process.pid
+      start_coverage_measurment
     end
 
     #
@@ -72,6 +66,7 @@ module SimpleCov
       # If we're using merging of results, store the current result
       # first (if there is one), then merge the results and return those
       if use_merging
+        wait_for_other_processes
         SimpleCov::ResultMerger.store_result(@result) if result?
         @result = SimpleCov::ResultMerger.merged_result
       end
@@ -129,22 +124,6 @@ module SimpleCov
     end
 
     #
-    # Checks whether we're on a proper version of Ruby (likely 1.9+) which
-    # provides coverage support
-    #
-    def usable?
-      return @usable if defined?(@usable) && !@usable.nil?
-
-      @usable = begin
-        require "coverage"
-        require "simplecov/jruby_fix"
-        true
-      rescue LoadError
-        false
-      end
-    end
-
-    #
     # Clear out the previously cached .result. Primarily useful in testing
     #
     def clear_result
@@ -181,11 +160,16 @@ module SimpleCov
 
       SimpleCov.at_exit.call
 
-      exit_status = SimpleCov.process_result(SimpleCov.result, exit_status)
+      # Don't modify the exit status unless the result has already been
+      # computed
+      exit_status = SimpleCov.process_result(SimpleCov.result, exit_status) if SimpleCov.result?
 
       # Force exit with stored status (see github issue #5)
       # unless it's nil or 0 (see github issue #281)
-      Kernel.exit exit_status if exit_status && exit_status > 0
+      if exit_status && exit_status.positive?
+        $stderr.printf("SimpleCov failed with exit %d\n", exit_status)
+        Kernel.exit exit_status
+      end
     end
 
     # @api private
@@ -194,14 +178,13 @@ module SimpleCov
     #   exit_status = SimpleCov.process_result(SimpleCov.result, exit_status)
     #
     def process_result(result, exit_status)
-      return exit_status unless SimpleCov.result? # Result has been computed
       return exit_status if exit_status != SimpleCov::ExitCodes::SUCCESS # Existing errors
 
       result_exit_status = result_exit_status(result)
       if result_exit_status == SimpleCov::ExitCodes::SUCCESS # No result errors
         write_last_run(result.covered_percent)
       end
-      result_exit_status
+      final_result_process? ? result_exit_status : SimpleCov::ExitCodes::SUCCESS
     end
 
     # @api private
@@ -249,6 +232,21 @@ module SimpleCov
       end
     end
     # rubocop:enable Metrics/MethodLength
+
+    #
+    # @api private
+    #
+    def final_result_process?
+      !defined?(ParallelTests) || ParallelTests.last_process?
+    end
+
+    #
+    # @api private
+    #
+    def wait_for_other_processes
+      return unless defined?(ParallelTests) && final_result_process?
+      ParallelTests.wait_for_other_processes_to_finish
+    end
 
     #
     # @api private
@@ -364,5 +362,5 @@ require "simplecov/run_file_coverage"
 # Load default config
 require "simplecov/defaults" unless ENV["SIMPLECOV_NO_DEFAULTS"]
 
-# Load Rails integration (only for Rails 3, see #113)
+# Load Rails integration
 require "simplecov/railtie" if defined? Rails::Railtie
