@@ -54,39 +54,47 @@ module SimpleCov
       Float(map { |f| f.covered_strength * f.lines_of_code }.sum / lines_of_code)
     end
 
-    # Return total count of branches in all files
+    # Return total count of all branches in all files
     def total_branches
-      map { |file| file.total_branches.count }.sum
+      map { |file| file.all_branches.count }.sum
     end
 
-    alias relevant_branches total_branches
+    # Return total count of relevent branches in all files
+    def relevant_branches
+      map { |file| file.relevant_branches.count }.sum
+    end
 
     # Return total count of covered branches
     def covered_branches
       map { |file| file.covered_branches.count }.sum
     end
 
-    # Return total count of covered branches
+    # Return total count of missed branches
     def missed_branches
       map { |file| file.missed_branches.count }.sum
     end
 
+      # Return total count of covered methods
     def covered_methods
       map { |file| file.covered_methods.count }.sum
     end
 
+    # Return total count of relevant methods
     def relevant_methods
       map { |file| file.relevant_methods.count }.sum
     end
 
+    # Return percent of covered methods
     def covered_methods_percent
       covered_methods * 100.0 / relevant_methods.to_f
     end
 
+    # Return total count of relevant lines
     def relevant_lines
       map(&:relevant_lines).sum
     end
 
+    # Return percent of covered branches
     def covered_branches_percent
       covered_branches * 100.0 / relevant_branches.to_f
     end

@@ -19,11 +19,12 @@ describe "result" do
       SimpleCov.formatter = @prev_formatter
     end
 
+    # TODO: add branches and methods
     let(:original_result) do
       {
-        source_fixture("sample.rb") => [nil, 1, 1, 1, nil, nil, 1, 1, nil, nil],
-        source_fixture("app/models/user.rb") => [nil, 1, 1, 1, nil, nil, 1, 0, nil, nil],
-        source_fixture("app/controllers/sample_controller.rb") => [nil, 1, 1, 1, nil, nil, 1, 0, nil, nil],
+        source_fixture("sample.rb") => { lines: [nil, 1, 1, 1, nil, nil, 1, 1, nil, nil] },
+        source_fixture("app/models/user.rb") => { lines: [nil, 1, 1, 1, nil, nil, 1, 0, nil, nil] },
+        source_fixture("app/controllers/sample_controller.rb") => { lines: [nil, 1, 1, 1, nil, nil, 1, 0, nil, nil] },
       }
     end
 

@@ -50,23 +50,17 @@ module SimpleCov
 
       ## Related to source file branches statistics
 
-      #
       # Call recursive method that transform our static hash to array of objects
       # @return [Array]
-      #
       def build_branches
         branches_collection(coverage[:branches] || {})
       end
 
-      #
       # Recursive method brings all of the branches as array of objects
       # In logic here we collect only the positive or negative branch,
       # not the first called branch for it
-      #
       # @param [Hash] given_branches
-      #
       # @return [Array]
-      #
       def branches_collection(given_branches, root_id = nil)
         @branches_collection ||= []
         given_branches.each do |branch_args, value|
@@ -83,101 +77,74 @@ module SimpleCov
         @branches_collection
       end
 
-      #
-      # Select the covered branches
+      # Select all branches
       # Here we user tree schema because some conditions like case may have additional
       # else that is not in declared inside the code but given by default by coverage report
-      #
       # @return [Array]
-      #
+      def all_branches
+        @all_branches ||= root_branches.flat_map do |root_branch|
+          root_branch.sub_branches(branches)
+        end
+      end
+
       def covered_branches
-        @covered_branches ||= root_branches.flat_map do |root_branch|
-          root_branch.sub_branches(branches).select(&:covered?)
-        end
+        @covered_branches ||= all_branches.select(&:covered?)
       end
 
-      #
       # Select the missed branches with coverage equal to zero
-      #
       # @return [Array]
-      #
       def missed_branches
-        @missed_branches ||= root_branches.flat_map do |root_branch|
-          root_branch.sub_branches(branches).select(&:missed?)
-        end
+        @missed_branches ||= all_branches.select(&:missed?)
       end
 
-      #
       # Select the perent branches inside the branches hash
-      #
       # @return [Array]
-      #
       def root_branches
         @root_branches = branches.select(&:root?)
       end
 
-      #
       # Method check if line is branches
-      #
       # @param [Integer] line_number
-      #
       # @return [Boolean]
-      #
       def branchable_line?(line_number)
         branches_report.keys.include?(line_number)
       end
 
-      #
       # Return String with branches message match to the line given
-      #
       # @param [Integer] line_number
-      #
       # @return [String] ex: "[1, '+'],[2, '-']" two times on negative branch and non on the positive
-      #
       def branch_per_line(line_number)
-        branches_report[line_number].each_with_object(" ".dup) do |data, message|
+        branches_report[line_number].to_a.each_with_object(" ".dup) do |data, message|
           separator = message.strip.empty? ? " " : ", "
           message << (separator + data.to_s)
         end.strip
       end
 
-      #
       # Check if any branches missing on given line number
-      #
       # @param [Integer] line_number
-      #
       # @return [Boolean]
-      #
       def line_with_missed_branch?(line_number)
         return unless branchable_line?(line_number)
         branches_report[line_number].select { |count, _sign| count.zero? }.any?
       end
 
-      #
       # Build full branches report
-      # Root branches represent the wrapper of all condition state that
-      # have inside the branches
-      #
+      # Root branches represent the wrapper of all condition state that have inside the branches
       # @return [Hash]
-      #
       def build_branches_report
         root_branches.each_with_object({}) do |root_branch, statistics|
           statistics.merge!(condition_report(root_branch))
         end
       end
 
-      #
       # Create hash as branches coverage report
       # keys: lines numbers matching the branch start line
       # Values: Array with matched branches data
-      #
       # @param [Array] branches
-      #
       # @return [Hash] ex: {
       #   1 => [[1,"+"], [0, "-"]],
       #   4 => [[10, "+"]]
       # }
-      #
       def condition_report(root_branch)
         if root_branch.inline_branch?(branches)
           inline_condition_report(root_branch)
@@ -186,28 +153,18 @@ module SimpleCov
         end
       end
 
-      #
       # Collect the information from all sub branches reports
-      #
       # @param [Branch object] root_branch
-      #
       # @return [Hash]
-      #
       def multiline_condition_report(root_branch)
         root_branch.sub_branches(branches).each_with_object({}) do |branch, cov_report|
           cov_report[branch.start_line - 1] = [branch.report]
         end
       end
 
-      #
-      # Collect all the reports from all branches that are
-      # on same line (positive & negative)
-      #
+      # Collect all the reports from all branches that are on same line (positive & negative)
       # @param [Branch object] root_branch
-      #
       # @return [Hash] ex: { 4 => [[10, "+"], [0, "-"]]}
-      #
-      #
       def inline_condition_report(root_branch)
         sub_branches = root_branch.sub_branches(branches)
         inline_result = sub_branches.each_with_object([]) do |branch, inline_report|
@@ -232,7 +189,7 @@ module SimpleCov
         @missed_methods ||= relevant_methods - covered_methods
       end
 
-    private
+      private
 
       def build_methods
         coverage[:methods].to_a.map do |info, coverage|

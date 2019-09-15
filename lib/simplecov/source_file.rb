@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
 module SimpleCov
-  #
   # Representation of a source file including it's coverage data, source code,
   # source lines and featuring helpers to interpret that data.
-  #
   class SourceFile
     include SimpleCov::Supports::SourceFileSupport
     # Representation of a single line in a source file including
@@ -73,7 +71,6 @@ module SimpleCov
       end
     end
 
-    #
     # Representing single branch that has been detected in coverage report.
     # Give us support methods that handle needed calculations.
     class Branch
@@ -90,76 +87,55 @@ module SimpleCov
         @coverage = 0
       end
 
-      #
       # Return true if there is relevant count defined > 0
-      #
       # @return [Boolean]
-      #
       def covered?
         !skipped? && coverage.positive?
       end
 
       def skipped?
         return @skipped if defined?(@skipped)
-        @skipped = lines.all?(&:skipped?)
+        @skipped = !lines.none?(&:skipped?)
       end
 
       def lines
-        @lines ||= source_file.lines[(start_line - 1)..(end_line - 1)]
+        @lines ||= source_file.lines[(start_line - 1)..(end_line - 1)].to_a
       end
 
-      #
-      # Check if branche missed or not
-      #
+      # Check if branch is missed or not
       # @return [Boolean]
-      #
       def missed?
         !skipped? && coverage.zero?
       end
 
-      #
       # Current branch is root or not
-      #
       # @return [Boolean]
-      #
       def root?
         root_id.nil?
       end
 
-      #
       # Current branch is sub_branch
-      #
       # @return [Boolean]
-      #
       def sub_branch?
         !root?
       end
 
-      #
       # Branch is positive or negative.
       # For `case` conditions, `when` always supposed as positive branch.
-      #
       # @return [Boolean]
-      #
       def positive?
         return true if type == :when
         1 + root_id.to_i == id
       end
 
-      #
       # Branch is negative
-      #
       # @return [Boolean]
-      #
       def negative?
         !positive?
       end
 
-      #
       # Return the sign depends on branch is positive or negative
-      #
       # @return [String]
-      #
       def badge
         positive? ? "+" : "-"
       end
@@ -203,6 +179,7 @@ module SimpleCov
       @coverage = coverage
     end
 
+    # TODO: use in resultset.json?
     # The path to this source file relative to the projects directory
     def project_filename
       @filename.sub(Regexp.new("^#{Regexp.escape(SimpleCov.root)}"), "")
@@ -231,7 +208,6 @@ module SimpleCov
       process_skipped_lines(lines)
     end
 
-    #
     # Return all the branches inside current source file
     def branches
       @branches ||= build_branches
@@ -250,7 +226,6 @@ module SimpleCov
     # The coverage for this file in percent. 0 if the file has no coverage lines
     def covered_percent
       return 100.0 if no_lines?
-
       return 0.0 if relevant_lines.zero?
 
       Float(covered_lines.size * 100.0 / relevant_lines.to_f)
@@ -275,23 +250,21 @@ module SimpleCov
     end
 
     def no_branches?
-      total_branches.empty?
+      all_branches.empty?
     end
 
     def branches_coverage_precent
       return 100.0 if no_branches? && no_lines?
       return 0.0 if covered_branches.size.zero?
 
-      Float(covered_branches.size * 100.0 / total_branches.size.to_f)
+      Float(covered_branches.size * 100.0 / relevant_branches.size.to_f)
     end
 
-    #
     # Return the relevant branches to source file
-    def total_branches
+    def relevant_branches
       covered_branches + missed_branches
     end
 
-    #
     # Return hash with key of line number and branch coverage count as value
     def branches_report
       @branches_report ||= build_branches_report

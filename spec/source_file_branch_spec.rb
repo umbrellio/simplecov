@@ -3,6 +3,12 @@
 require "helper"
 
 describe SimpleCov::SourceFile::Branch do
+  def generate_branch(info, root_id)
+    SimpleCov::SourceFile::Branch.new(source_file, info, root_id)
+  end
+
+  let(:source_file) { double(:source_file, lines: []) }
+
   let(:results) do
     [[:if, 0, 1, 4, 10, 4],
      [:then, 1, 2, 6, 8, 4],
@@ -12,15 +18,15 @@ describe SimpleCov::SourceFile::Branch do
   end
 
   let(:root_branch) do
-    SimpleCov::SourceFile::Branch.new(*(results[0] + [nil]))
+    generate_branch(results[0], nil)
   end
 
   let(:positive_sub_branch) do
-    SimpleCov::SourceFile::Branch.new(*(results[1] + [0]))
+    generate_branch(results[1], 0)
   end
 
   let(:negative_sub_branch) do
-    SimpleCov::SourceFile::Branch.new(*(results[2] + [0]))
+    generate_branch(results[2], 0)
   end
 
   let(:branches) do
@@ -28,9 +34,11 @@ describe SimpleCov::SourceFile::Branch do
   end
 
   let(:inline_branches) do
-    [root_branch,
-     SimpleCov::SourceFile::Branch.new(*(results[3] + [0])),
-     SimpleCov::SourceFile::Branch.new(*(results[4] + [0]))]
+    [
+      root_branch,
+      generate_branch(results[3], 0),
+      generate_branch(results[4], 0),
+    ]
   end
 
   context "A source branch if..else" do
@@ -39,7 +47,7 @@ describe SimpleCov::SourceFile::Branch do
     end
 
     it "Is a root branch" do
-      expect(positive_sub_branch.root?).to be       false
+      expect(positive_sub_branch.root?).to be false
       expect(negative_sub_branch.sub_branch?).to be true
     end
 
@@ -76,21 +84,25 @@ describe SimpleCov::SourceFile::Branch do
     end
 
     let(:case_branch) do
-      SimpleCov::SourceFile::Branch.new(*(results[0] + [nil]))
+      generate_branch(results[0], nil)
     end
 
     let(:branches_without_else) do
-      [case_branch,
-       SimpleCov::SourceFile::Branch.new(*(results[1] + [0])),
-       SimpleCov::SourceFile::Branch.new(*(results[2] + [0])),
-       SimpleCov::SourceFile::Branch.new(*(results[3] + [0]))]
+      [
+        case_branch,
+        generate_branch(results[1], 0),
+        generate_branch(results[2], 0),
+        generate_branch(results[3], 0),
+      ]
     end
 
     let(:branches_with_else) do
-      [case_branch,
-       SimpleCov::SourceFile::Branch.new(*(results[1] + [0])),
-       SimpleCov::SourceFile::Branch.new(*(results[2] + [0])),
-       SimpleCov::SourceFile::Branch.new(*(results[4] + [0]))]
+      [
+        case_branch,
+        generate_branch(results[1], 0),
+        generate_branch(results[2], 0),
+        generate_branch(results[4], 0),
+      ]
     end
 
     it "When branche badge is positive" do
@@ -115,8 +127,7 @@ describe SimpleCov::SourceFile::Branch do
 
   context "A source branch with coverage" do
     let(:covered_branch) do
-      attrs = [:when, 1, 2, 6, 8, 4]
-      branch = SimpleCov::SourceFile::Branch.new(*(attrs + [0]))
+      branch = generate_branch([:when, 1, 2, 6, 8, 4], 0)
       branch.coverage = 5
       branch
     end
@@ -132,8 +143,7 @@ describe SimpleCov::SourceFile::Branch do
 
   context "A source branch with out coverage" do
     let(:covered_branch) do
-      attrs = [:when, 1, 2, 6, 8, 4]
-      branch = SimpleCov::SourceFile::Branch.new(*(attrs + [0]))
+      branch = generate_branch([:when, 1, 2, 6, 8, 4], 0)
       branch.coverage = 0
       branch
     end
