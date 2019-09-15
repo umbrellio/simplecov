@@ -160,9 +160,8 @@ module SimpleCov
 
       SimpleCov.at_exit.call
 
-      # Don't modify the exit status unless the result has already been
-      # computed
-      exit_status = SimpleCov.process_result(SimpleCov.result, exit_status) if SimpleCov.result?
+      # Don't modify the exit status unless the result has already been computed
+      exit_status = SimpleCov::ResultProcessor.call(SimpleCov.result, exit_status) if SimpleCov.result?
 
       # Force exit with stored status (see github issue #5)
       # unless it's nil or 0 (see github issue #281)
@@ -171,69 +170,6 @@ module SimpleCov
         Kernel.exit exit_status
       end
     end
-
-    # @api private
-    #
-    # Usage:
-    #   exit_status = SimpleCov.process_result(SimpleCov.result, exit_status)
-    #
-    def process_result(result, exit_status)
-      return exit_status if exit_status != SimpleCov::ExitCodes::SUCCESS # Existing errors
-
-      result_exit_status = result_exit_status(result)
-      if result_exit_status == SimpleCov::ExitCodes::SUCCESS # No result errors
-        write_last_run(result.covered_percent.round(2))
-      end
-      final_result_process? ? result_exit_status : SimpleCov::ExitCodes::SUCCESS
-    end
-
-    # @api private
-    #
-    # rubocop:disable all
-    def result_exit_status(result)
-      covered_percent = result.covered_percent.round(2)
-      covered_percentages = result.covered_percentages.map { |percentage| percentage.round(2) }
-
-      if covered_percent < SimpleCov.minimum_coverage
-        $stderr.printf(
-          "Line coverage (%.2f%%) is below the expected minimum coverage (%.2f%%).\n",
-          covered_percent, SimpleCov.minimum_coverage
-        )
-        SimpleCov::ExitCodes::MINIMUM_COVERAGE
-      elsif result.covered_methods_percent < SimpleCov.minimum_method_coverage
-        $stderr.printf(
-          "Method coverage (%.2f%%) is below the expected minimum coverage (%.2f%%).\n",
-          result.covered_methods_percent, SimpleCov.minimum_method_coverage
-        )
-        SimpleCov::ExitCodes::MINIMUM_COVERAGE
-      elsif result.covered_branches_percent < SimpleCov.minimum_branch_coverage
-        $stderr.printf(
-          "Branch coverage (%.2f%%) is below the expected minimum coverage (%.2f%%).\n",
-          result.covered_branches_percent, SimpleCov.minimum_branch_coverage
-        )
-        SimpleCov::ExitCodes::MINIMUM_COVERAGE
-      elsif covered_percentages.any? { |p| p < SimpleCov.minimum_coverage_by_file }
-        $stderr.printf(
-          "File (%s) is only (%.2f%%) covered. This is below the expected minimum coverage per file of (%.2f%%).\n",
-          result.least_covered_file, covered_percentages.min, SimpleCov.minimum_coverage_by_file
-        )
-        SimpleCov::ExitCodes::MINIMUM_COVERAGE
-      elsif (last_run = SimpleCov::LastRun.read)
-        coverage_diff = last_run["result"]["covered_percent"] - covered_percent
-        if coverage_diff > SimpleCov.maximum_coverage_drop
-          $stderr.printf(
-            "Coverage has dropped by %.2f%% since the last time (maximum allowed: %.2f%%).\n",
-            coverage_diff, SimpleCov.maximum_coverage_drop
-          )
-          SimpleCov::ExitCodes::MAXIMUM_COVERAGE_DROP
-        else
-          SimpleCov::ExitCodes::SUCCESS
-        end
-      else
-        SimpleCov::ExitCodes::SUCCESS
-      end
-    end
-    # rubocop:enable all
 
     #
     # @api private
@@ -248,13 +184,6 @@ module SimpleCov
     def wait_for_other_processes
       return unless defined?(ParallelTests) && final_result_process?
       ParallelTests.wait_for_other_processes_to_finish
-    end
-
-    #
-    # @api private
-    #
-    def write_last_run(covered_percent)
-      SimpleCov::LastRun.write(:result => {:covered_percent => covered_percent})
     end
 
   private
@@ -347,6 +276,7 @@ require "simplecov/formatter"
 require "simplecov/last_run"
 require "simplecov/lines_classifier"
 require "simplecov/result_merger"
+require "simplecov/result_processor"
 require "simplecov/command_guesser"
 require "simplecov/version"
 require "simplecov/result_adapter"

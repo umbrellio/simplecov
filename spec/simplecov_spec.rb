@@ -171,25 +171,5 @@ describe SimpleCov do
         expect(SimpleCov.exit_status_from_exception).to eq(SimpleCov::ExitCodes::EXCEPTION)
       end
     end
-
-    describe ".process_result" do
-      before do
-        expect(SimpleCov).to receive(:result_exit_status).and_return SimpleCov::ExitCodes::MINIMUM_COVERAGE
-      end
-      context "when the final result process" do
-        let(:result) { double(SimpleCov::Result, :covered_percent => 0.0) }
-        before { expect(SimpleCov).to receive(:final_result_process?).and_return true }
-        it "returns the exit code from .result_exit_status" do
-          expect(SimpleCov.process_result(result, SimpleCov::ExitCodes::SUCCESS)).to eq SimpleCov::ExitCodes::MINIMUM_COVERAGE
-        end
-      end
-      context "when not the final result process" do
-        let(:result) { double(SimpleCov::Result, :covered_percent => 0.0) }
-        before { expect(SimpleCov).to receive(:final_result_process?).and_return false }
-        it "returns the success exit code" do
-          expect(SimpleCov.process_result(result, SimpleCov::ExitCodes::SUCCESS)).to eq SimpleCov::ExitCodes::SUCCESS
-        end
-      end
-    end
   end
 end
