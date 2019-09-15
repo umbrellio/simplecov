@@ -22,9 +22,9 @@ describe "result" do
     # TODO: add branches and methods
     let(:original_result) do
       {
-        source_fixture("sample.rb") => { lines: [nil, 1, 1, 1, nil, nil, 1, 1, nil, nil] },
-        source_fixture("app/models/user.rb") => { lines: [nil, 1, 1, 1, nil, nil, 1, 0, nil, nil] },
-        source_fixture("app/controllers/sample_controller.rb") => { lines: [nil, 1, 1, 1, nil, nil, 1, 0, nil, nil] },
+        source_fixture("sample.rb") => {:lines => [nil, 1, 1, 1, nil, nil, 1, 1, nil, nil]},
+        source_fixture("app/models/user.rb") => {:lines => [nil, 1, 1, 1, nil, nil, 1, 0, nil, nil]},
+        source_fixture("app/controllers/sample_controller.rb") => {:lines => [nil, 1, 1, 1, nil, nil, 1, 0, nil, nil]},
       }
     end
 

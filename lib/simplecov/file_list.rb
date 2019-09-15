@@ -74,7 +74,7 @@ module SimpleCov
       map { |file| file.missed_branches.count }.sum
     end
 
-      # Return total count of covered methods
+    # Return total count of covered methods
     def covered_methods
       map { |file| file.covered_methods.count }.sum
     end

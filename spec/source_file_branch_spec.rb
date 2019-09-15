@@ -7,7 +7,7 @@ describe SimpleCov::SourceFile::Branch do
     SimpleCov::SourceFile::Branch.new(source_file, info, root_id)
   end
 
-  let(:source_file) { double(:source_file, lines: []) }
+  let(:source_file) { double(:source_file, :lines => []) }
 
   let(:results) do
     [[:if, 0, 1, 4, 10, 4],

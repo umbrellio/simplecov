@@ -95,7 +95,7 @@ module SimpleCov
 
       def skipped?
         return @skipped if defined?(@skipped)
-        @skipped = !lines.none?(&:skipped?)
+        @skipped = lines.any?(&:skipped?)
       end
 
       def lines

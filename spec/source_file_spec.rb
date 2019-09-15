@@ -4,14 +4,14 @@ require "helper"
 
 describe SimpleCov::SourceFile do
   let(:coverage_for_never_rb) do
-    { lines: [nil, nil] }
+    {:lines => [nil, nil]}
   end
 
   # TODO: add methods
   let(:sample_coverage) do
     {
-      lines: [nil, 1, 1, 1, nil, nil, 1, 0, nil, nil, nil, nil, nil, nil, nil, nil],
-      branches: {
+      :lines => [nil, 1, 1, 1, nil, nil, 1, 0, nil, nil, nil, nil, nil, nil, nil, nil],
+      :branches => {
         [:if, 0, 2, 6, 6, 9] => {
           [:then, 1, 3, 8, 4, 81] => 3,
           [:else, 2, 5, 8, 6, 19] => 0,
@@ -115,7 +115,7 @@ describe SimpleCov::SourceFile do
         2 => [[3, "+"]],
         4 => [[0, "-"]],
         8 => [[3, "+"]],
-        10 => [[0, "-"]],
+        10 => [[0, "-"]]
       )
     end
 
@@ -147,8 +147,8 @@ describe SimpleCov::SourceFile do
   context "A file that have inline branches" do
     let(:coverage_for_dumb_inline) do
       {
-        lines: [nil, 1, 1, 1, nil, nil, 1, 0, nil, nil, nil, nil, nil, nil, nil, nil],
-        branches: {
+        :lines => [nil, 1, 1, 1, nil, nil, 1, 0, nil, nil, nil, nil, nil, nil, nil, nil],
+        :branches => {
           [:if, 0, 3, 6, 3, 9] => {
             [:then, 1, 3, 8, 3, 81] => 3,
             [:else, 2, 3, 8, 4, 19] => 0,
@@ -193,7 +193,7 @@ describe SimpleCov::SourceFile do
 
   context "a file that is never relevant" do
     let(:coverage) do
-      { lines: [nil, 1, 1, 1, nil, nil, 1, 0, nil, nil, nil, nil, nil, nil, nil, nil, nil] }
+      {:lines => [nil, 1, 1, 1, nil, nil, 1, 0, nil, nil, nil, nil, nil, nil, nil, nil, nil]}
     end
 
     subject do
@@ -228,7 +228,7 @@ describe SimpleCov::SourceFile do
 
   context "a file where nothing is ever executed mixed with skipping #563" do
     let(:coverage) do
-      { lines: [nil, nil, nil, nil] }
+      {:lines => [nil, nil, nil, nil]}
     end
 
     subject do
@@ -246,7 +246,7 @@ describe SimpleCov::SourceFile do
 
   context "a file where everything is skipped and missed #563" do
     let(:coverage) do
-      { lines: [nil, nil, 0, nil] }
+      {:lines => [nil, nil, 0, nil]}
     end
 
     subject do
@@ -264,7 +264,7 @@ describe SimpleCov::SourceFile do
 
   context "a file where everything is skipped/irrelevamt but executed #563" do
     let(:coverage) do
-      { lines: [nil, nil, 1, 1, 0, nil, nil, nil] }
+      {:lines => [nil, nil, 1, 1, 0, nil, nil, nil]}
     end
 
     subject do

@@ -20,7 +20,7 @@ module SimpleCov
         {result.command_name => data}
       end
 
-      def deserialize(hash)
+      def deserialize(hash) # rubocop:disable Metrics/MethodLength
         command_name, data = hash.first
 
         coverage = {}
@@ -44,7 +44,7 @@ module SimpleCov
 
     private
 
-      def serialize_value(key, value)
+      def serialize_value(key, value) # rubocop:disable Metrics/MethodLength
         case key
         when :branches
           value.map { |k, v| [k, v.to_a] }

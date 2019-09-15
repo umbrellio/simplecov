@@ -108,7 +108,7 @@ describe SimpleCov::ResultMerger do
       skip "fork not available on JRuby" if RUBY_ENGINE == "jruby"
 
       # TODO: check JSON serialization
-      coverage = {__FILE__ => { :"lines" => 5.downto(1).to_a }}
+      coverage = {__FILE__ => {:lines => 5.downto(1).to_a}}
 
       # Fork to ensure that the Kernel.at_exit block defined in
       # simplecov/defaults.rb runs
