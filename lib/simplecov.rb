@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "English"
+require "coverage"
 
 #
 # Code coverage for ruby. Please check out README for a full introduction.
@@ -44,7 +45,6 @@ module SimpleCov
     # Please check out the RDoc for SimpleCov::Configuration to find about available config options
     #
     def start(profile = nil, &block)
-      require "coverage"
       load_profile(profile) if profile
       configure(&block) if block_given?
       @result = nil
