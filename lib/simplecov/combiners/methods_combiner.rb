@@ -23,7 +23,8 @@ module SimpleCov
         result_coverage = {}
 
         first_coverage.each_key do |method|
-          result_coverage[method] = first_coverage.fetch(method) + second_coverage.fetch(method)
+          result_coverage[method] =
+            first_coverage.fetch(method, 0) + second_coverage.fetch(method, 0)
         end
 
         result_coverage
