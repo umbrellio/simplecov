@@ -10,7 +10,7 @@ require "simplecov/formatter/multi_formatter"
 #
 module SimpleCov
   module Configuration # rubocop:disable ModuleLength
-    attr_writer :filters, :groups, :formatter, :branchable_report
+    attr_writer :filters, :groups, :formatter, :branchable_report, :print_error_status
 
     #
     # The root for the project. This defaults to the
@@ -123,6 +123,14 @@ module SimpleCov
       else
         Array(formatter)
       end
+    end
+
+    #
+    # Whether we should print non-success status codes. This can be
+    # configured with the #print_error_status= method.
+    #
+    def print_error_status
+      defined?(@print_error_status) ? @print_error_status : true
     end
 
     #

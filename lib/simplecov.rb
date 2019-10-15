@@ -166,7 +166,7 @@ module SimpleCov
       # Force exit with stored status (see github issue #5)
       # unless it's nil or 0 (see github issue #281)
       if exit_status && exit_status.positive?
-        $stderr.printf("SimpleCov failed with exit %d\n", exit_status)
+        $stderr.printf("SimpleCov failed with exit %d\n", exit_status) if print_error_status
         Kernel.exit exit_status
       end
     end
@@ -175,7 +175,8 @@ module SimpleCov
     # @api private
     #
     def final_result_process?
-      !defined?(ParallelTests) || ParallelTests.last_process?
+      # checking for ENV["TEST_ENV_NUMBER"] to determine if the tests are being run in parallel
+      !defined?(ParallelTests) || !ENV["TEST_ENV_NUMBER"] || ParallelTests.number_of_running_processes <= 1
     end
 
     #
