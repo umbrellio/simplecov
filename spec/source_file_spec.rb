@@ -186,7 +186,7 @@ describe SimpleCov::SourceFile do
       expect(subject.branches_report[3]).to eq([[3, "+"], [0, "-"]])
     end
 
-    it "Has branches coverage precent 2/3" do
+    it "Has branches coverage percent 2/3" do
       expect(subject.branches_coverage_percent.round(2)).to eq(66.67)
     end
   end
