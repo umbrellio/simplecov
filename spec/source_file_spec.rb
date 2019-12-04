@@ -187,7 +187,7 @@ describe SimpleCov::SourceFile do
     end
 
     it "Has branches coverage precent 2/3" do
-      expect(subject.branches_coverage_precent.round(2)).to eq(66.67)
+      expect(subject.branches_coverage_percent.round(2)).to eq(66.67)
     end
   end
 

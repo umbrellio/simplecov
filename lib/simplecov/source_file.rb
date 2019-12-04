@@ -253,7 +253,7 @@ module SimpleCov
       all_branches.empty?
     end
 
-    def branches_coverage_precent
+    def branches_coverage_percent
       return 100.0 if no_branches? && no_lines?
       return 0.0 if covered_branches.size.zero?
 
