@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require "English"
+require "set"
+require "forwardable"
 
 # Coverage may be inaccurate under JRUBY.
 if defined?(JRUBY_VERSION) && defined?(JRuby) && !org.jruby.RubyInstanceConfig.FULL_TRACE_ENABLED
@@ -20,7 +22,51 @@ end
 # Code coverage for ruby. Please check out README for a full introduction.
 #
 module SimpleCov
+  require_relative "simplecov/configuration"
+  require_relative "simplecov/coverage_statistics"
+  require_relative "simplecov/exit_codes"
+  require_relative "simplecov/profiles"
+  require_relative "simplecov/source_file/line"
+  require_relative "simplecov/source_file/branch"
+  require_relative "simplecov/source_file/method"
+  require_relative "simplecov/source_file"
+  require_relative "simplecov/file_list"
+  require_relative "simplecov/result"
+  require_relative "simplecov/filter"
+  require_relative "simplecov/formatter"
+  require_relative "simplecov/last_run"
+  require_relative "simplecov/lines_classifier"
+  require_relative "simplecov/result_merger"
+  require_relative "simplecov/result_serialization"
+  require_relative "simplecov/command_guesser"
+  require_relative "simplecov/version"
+  require_relative "simplecov/result_adapter"
+  require_relative "simplecov/combine"
+  require_relative "simplecov/combine/branches_combiner"
+  require_relative "simplecov/combine/methods_combiner"
+  require_relative "simplecov/combine/files_combiner"
+  require_relative "simplecov/combine/lines_combiner"
+  require_relative "simplecov/combine/results_combiner"
+  require_relative "simplecov/useless_results_remover"
+  require_relative "simplecov/simulate_coverage"
+
   class << self
+    def default_instance
+      @default_instance ||= build_instance
+    end
+
+    def build_instance
+      Instance.new
+    end
+
+    def method_missing(name, *args, **options, &block)
+      default_instance.public_send(name, *args, **options, &block)
+    end
+  end
+
+  class Instance
+    include SimpleCov::Configuration
+
     attr_accessor :running, :pid
 
     # Basically, should we take care of at_exit behavior or something else?
@@ -57,6 +103,10 @@ module SimpleCov
       self.pid = Process.pid
 
       start_coverage_measurement
+
+      at_exit do
+        at_exit_behavior unless external_at_exit?
+      end
     end
 
     #
@@ -434,39 +484,7 @@ module SimpleCov
       ENV["TEST_ENV_NUMBER"] && ENV["PARALLEL_TEST_GROUPS"]
     end
   end
+
+  # Load default config
+  require_relative "simplecov/defaults" unless ENV["SIMPLECOV_NO_DEFAULTS"]
 end
-
-# requires are down here here for a load order reason I'm not sure what it is about
-require "set"
-require "forwardable"
-require_relative "simplecov/configuration"
-SimpleCov.extend SimpleCov::Configuration
-require_relative "simplecov/coverage_statistics"
-require_relative "simplecov/exit_codes"
-require_relative "simplecov/profiles"
-require_relative "simplecov/source_file/line"
-require_relative "simplecov/source_file/branch"
-require_relative "simplecov/source_file/method"
-require_relative "simplecov/source_file"
-require_relative "simplecov/file_list"
-require_relative "simplecov/result"
-require_relative "simplecov/filter"
-require_relative "simplecov/formatter"
-require_relative "simplecov/last_run"
-require_relative "simplecov/lines_classifier"
-require_relative "simplecov/result_merger"
-require_relative "simplecov/result_serialization"
-require_relative "simplecov/command_guesser"
-require_relative "simplecov/version"
-require_relative "simplecov/result_adapter"
-require_relative "simplecov/combine"
-require_relative "simplecov/combine/branches_combiner"
-require_relative "simplecov/combine/methods_combiner"
-require_relative "simplecov/combine/files_combiner"
-require_relative "simplecov/combine/lines_combiner"
-require_relative "simplecov/combine/results_combiner"
-require_relative "simplecov/useless_results_remover"
-require_relative "simplecov/simulate_coverage"
-
-# Load default config
-require_relative "simplecov/defaults" unless ENV["SIMPLECOV_NO_DEFAULTS"]

@@ -5,7 +5,18 @@ require "stringio"
 require "open3"
 # loaded before simplecov to also capture parse time warnings
 require "support/fail_rspec_on_ruby_warning"
+
 require "simplecov"
+
+simplecov = SimpleCov.build_instance
+
+simplecov.start do
+  add_filter "spec"
+  track_files "lib/**/*.rb"
+  enable_coverage :line
+  enable_coverage :branch
+  enable_coverage :method
+end
 
 SimpleCov.coverage_dir("tmp/coverage")
 

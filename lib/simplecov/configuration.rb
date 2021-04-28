@@ -194,7 +194,7 @@ module SimpleCov
       return Proc.new unless running || block_given?
 
       @at_exit = block if block_given?
-      @at_exit ||= proc { SimpleCov.result.format! }
+      @at_exit ||= proc { result.format! }
     end
 
     # gets or sets the enabled_for_subprocess configuration
