@@ -9,7 +9,7 @@ Feature:
   Scenario:
     Given SimpleCov for Minitest is configured with:
       """
-      require 'simplecov'
+      require "simplecov"
       SimpleCov.start do
         add_filter "test_helper.rb"
       end
