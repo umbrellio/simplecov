@@ -2,22 +2,11 @@
 
 $LOAD_PATH.push File.expand_path("lib", __dir__)
 
-# Why oh why oh what is this?
-# See the cuke that is setting this.
-# Basically to really reproduce #877 we needed a gemspec that doesn't
-# (indirectly) define a SimpleCov module... so this is the workaround.
-# No one ever but hat test should set that environment variable. Please.
-version =
-  if ENV["SIMPLECOV_NO_REQUIRE_VERSION"]
-    ENV["SIMPLECOV_NO_REQUIRE_VERSION"]
-  else
-    require "simplecov/version"
-    SimpleCov::VERSION
-  end
+require "simplecov/version"
 
 Gem::Specification.new do |gem|
   gem.name        = "simplecov"
-  gem.version     = version
+  gem.version     = SimpleCov::VERSION
   gem.platform    = Gem::Platform::RUBY
   gem.authors     = ["Christoph Olszowka", "Tobias Pfeiffer"]
   gem.email       = ["christoph at olszowka de", "pragtob@gmail.com"]

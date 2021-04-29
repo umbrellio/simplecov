@@ -318,7 +318,7 @@ module SimpleCov
     #
     def write_last_run(result)
       data = result.coverage_statistics.transform_values { |x| round_coverage(x.percent) }
-      result_json = { result: data }
+      result_json = {result: data}
       SimpleCov::LastRun.write(result_json, instance: self)
     end
 

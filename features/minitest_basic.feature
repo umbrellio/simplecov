@@ -46,12 +46,5 @@ Feature:
       """
       # nothing
       """
-    # What's this? Path requirements in the Gemfile evaluate the gemspec,
-    # which normally loads the version, which defined SimpleCov which leads
-    # to a different failure. This works around that issue.
-    And I set the environment variables to:
-      | variable                     | value   |
-      | SIMPLECOV_NO_REQUIRE_VERSION | 100.0.0 |
-
     When I successfully run `bundle exec rake minitest`
     Then no coverage report should have been generated
