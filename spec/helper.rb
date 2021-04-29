@@ -3,10 +3,11 @@
 require "rspec"
 require "stringio"
 require "open3"
-# loaded before simplecov to also capture parse time warnings
+
+# Loaded before simplecov to also capture parse time warnings
 require "support/fail_rspec_on_ruby_warning"
 
-# we have to start coverage ourself since we should do it before requiring any SimpleCov code
+# We have to start coverage ourself since it should be done before requiring any SimpleCov code
 require "coverage"
 coverage_args = Coverage.method(:start).arity.zero? ? [] : [:all]
 Coverage.start(*coverage_args)
@@ -15,6 +16,7 @@ require "simplecov"
 
 simplecov = SimpleCov.build
 
+# Defaults are not loaded for custom instance so we have to configure all the stuff here
 simplecov.start do
   formatter SimpleCov::Formatter::HTMLFormatter
   add_filter "/spec/"
@@ -26,6 +28,7 @@ end
 
 Kernel.at_exit { simplecov.at_exit_behavior }
 
+SimpleCov.external_at_exit = true
 SimpleCov.coverage_dir("tmp/coverage")
 
 def source_fixture(filename)
