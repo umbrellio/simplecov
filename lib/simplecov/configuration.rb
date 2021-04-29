@@ -231,6 +231,7 @@ module SimpleCov
     #     end
     #
     def at_fork(&block)
+      require 'pry'; binding.pry
       @at_fork = block if block_given?
       @at_fork ||= lambda { |pid|
         # This needs a unique name so it won't be ovewritten

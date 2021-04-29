@@ -8,10 +8,10 @@ require "support/fail_rspec_on_ruby_warning"
 
 require "simplecov"
 
-simplecov = SimpleCov.build_instance
+simplecov = SimpleCov.build
 
 simplecov.start do
-  add_filter "spec"
+  add_filter "/spec/"
   track_files "lib/**/*.rb"
   enable_coverage :line
   enable_coverage :branch

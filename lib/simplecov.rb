@@ -51,16 +51,16 @@ module SimpleCov
   require_relative "simplecov/simulate_coverage"
 
   class << self
-    def default_instance
-      @default_instance ||= build_instance
+    def instance
+      @instance ||= build
     end
 
-    def build_instance
+    def build
       Instance.new
     end
 
     def method_missing(name, *args, **options, &block)
-      default_instance.public_send(name, *args, **options, &block)
+      instance.public_send(name, *args, **options, &block)
     end
   end
 
@@ -94,8 +94,7 @@ module SimpleCov
     def start(profile = nil, &block)
       require "coverage"
       initial_setup(profile, &block)
-      require_relative "./simplecov/process" if SimpleCov.enabled_for_subprocesses? &&
-                                                ::Process.respond_to?(:fork)
+      require_relative "./simplecov/process" if enabled_for_subprocesses? && ::Process.respond_to?(:fork)
 
       make_parallel_tests_available
 
@@ -104,7 +103,7 @@ module SimpleCov
 
       start_coverage_measurement
 
-      at_exit do
+      Kernel.at_exit do
         at_exit_behavior unless external_at_exit?
       end
     end
@@ -183,7 +182,7 @@ module SimpleCov
       filters.each do |filter|
         result = result.reject { |source_file| filter.matches?(source_file) }
       end
-      SimpleCov::FileList.new result
+      SimpleCov::FileList.new(self, result)
     end
 
     #
@@ -223,10 +222,10 @@ module SimpleCov
 
     def at_exit_behavior
       # If we are in a different process than called start, don't interfere.
-      return if SimpleCov.pid != Process.pid
+      return if pid != Process.pid
 
       # If SimpleCov is no longer running then don't run exit tasks
-      SimpleCov.run_exit_tasks! if SimpleCov.running
+      run_exit_tasks! if running
     end
 
     # @api private

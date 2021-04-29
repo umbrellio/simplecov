@@ -12,13 +12,13 @@ describe SimpleCov do
 
     context "with merging disabled" do
       before do
-        allow(SimpleCov).to receive(:use_merging).once.and_return(false)
-        expect(SimpleCov).to_not receive(:wait_for_other_processes)
+        allow(SimpleCov.instance).to receive(:use_merging).once.and_return(false)
+        expect(SimpleCov.instance).to_not receive(:wait_for_other_processes)
       end
 
       context "when not running" do
         before do
-          allow(SimpleCov).to receive(:running).and_return(false)
+          allow(SimpleCov.instance).to receive(:running).and_return(false)
         end
 
         it "returns nil" do
@@ -28,7 +28,7 @@ describe SimpleCov do
 
       context "when running" do
         before do
-          allow(SimpleCov).to receive(:running).and_return(true, false)
+          allow(SimpleCov.instance).to receive(:running).and_return(true, false)
         end
 
         it "uses the result from Coverage" do
@@ -37,7 +37,7 @@ describe SimpleCov do
         end
 
         it "adds not-loaded-files" do
-          expect(SimpleCov).to receive(:add_not_loaded_files).once.and_return({})
+          expect(SimpleCov.instance).to receive(:add_not_loaded_files).once.and_return({})
           SimpleCov.result
         end
 
@@ -62,15 +62,15 @@ describe SimpleCov do
       let(:the_merged_result) { double }
 
       before do
-        allow(SimpleCov).to receive(:use_merging).once.and_return(true)
+        allow(SimpleCov.instance).to receive(:use_merging).once.and_return(true)
         allow(SimpleCov::ResultMerger).to receive(:store_result).once
         allow(SimpleCov::ResultMerger).to receive(:merged_result).once.and_return(the_merged_result)
-        expect(SimpleCov).to receive(:wait_for_other_processes)
+        expect(SimpleCov.instance).to receive(:wait_for_other_processes)
       end
 
       context "when not running" do
         before do
-          allow(SimpleCov).to receive(:running).and_return(false)
+          allow(SimpleCov.instance).to receive(:running).and_return(false)
         end
 
         it "merges the result" do
@@ -80,7 +80,7 @@ describe SimpleCov do
 
       context "when running" do
         before do
-          allow(SimpleCov).to receive(:running).and_return(true, false)
+          allow(SimpleCov.instance).to receive(:running).and_return(true, false)
         end
 
         it "uses the result from Coverage" do
@@ -89,7 +89,7 @@ describe SimpleCov do
         end
 
         it "adds not-loaded-files" do
-          expect(SimpleCov).to receive(:add_not_loaded_files).once.and_return({})
+          expect(SimpleCov.instance).to receive(:add_not_loaded_files).once.and_return({})
           SimpleCov.result
         end
 
@@ -139,8 +139,8 @@ describe SimpleCov do
 
     context "when minimum coverage is 100%" do
       before do
-        allow(SimpleCov).to receive(:minimum_coverage).and_return(line: 100)
-        allow(SimpleCov).to receive(:result?).and_return(true)
+        allow(SimpleCov.instance).to receive(:minimum_coverage).and_return(line: 100)
+        allow(SimpleCov.instance).to receive(:result?).and_return(true)
       end
 
       context "when actual coverage is almost 100%" do
@@ -174,8 +174,8 @@ describe SimpleCov do
 
       context "branch coverage" do
         before do
-          allow(SimpleCov).to receive(:minimum_coverage).and_return(branch: 90)
-          allow(SimpleCov).to receive(:result?).and_return(true)
+          allow(SimpleCov.instance).to receive(:minimum_coverage).and_return(branch: 90)
+          allow(SimpleCov.instance).to receive(:result?).and_return(true)
         end
 
         it "errors out when the coverage is too low" do
@@ -232,7 +232,7 @@ describe SimpleCov do
 
     context "when files to be merged" do
       before do
-        expect(SimpleCov).to receive(:run_exit_tasks!)
+        expect(SimpleCov.instance).to receive(:run_exit_tasks!)
       end
 
       context "and a single report to be merged" do
@@ -332,7 +332,7 @@ describe SimpleCov do
     it "starts coverage in lines mode by default" do
       expect(Coverage).to receive(:start).with(lines: true)
 
-      SimpleCov.send :start_coverage_measurement
+      SimpleCov.instance.send :start_coverage_measurement
     end
 
     it "starts coverage with lines and branches if branch coverage is activated" do
@@ -340,7 +340,7 @@ describe SimpleCov do
 
       SimpleCov.enable_coverage :branch
 
-      SimpleCov.send :start_coverage_measurement
+      SimpleCov.instance.send :start_coverage_measurement
     end
 
     it "starts coverage with lines and methods if method coverage is activated" do
@@ -348,7 +348,7 @@ describe SimpleCov do
 
       SimpleCov.enable_coverage :method
 
-      SimpleCov.send :start_coverage_measurement
+      SimpleCov.instance.send :start_coverage_measurement
     end
   end
 end

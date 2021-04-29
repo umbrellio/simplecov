@@ -27,14 +27,17 @@ module SimpleCov
 
     # Initialize a new SimpleCov::Result from given Coverage.result (a Hash of filenames each containing an array of
     # coverage data)
-    def initialize(original_result, command_name: nil, created_at: nil)
+    def initialize(instance, original_result, command_name: nil, created_at: nil)
       result = original_result
       @original_result = result.freeze
       @command_name = command_name
       @created_at = created_at
-      @files = SimpleCov::FileList.new(result.map do |filename, coverage|
+
+      source_files = result.map do |filename, coverage|
         SimpleCov::SourceFile.new(filename, coverage) if File.file?(filename)
-      end.compact.sort_by(&:filename))
+      end
+
+      @files = SimpleCov::FileList.new(instance, source_files.compact.sort_by(&:filename))
 
       filter!
     end

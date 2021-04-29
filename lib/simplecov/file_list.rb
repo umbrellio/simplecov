@@ -19,7 +19,7 @@ module SimpleCov
                    # still act like we're kinda an array
                    :to_a, :to_ary
 
-    def initialize(files)
+    def initialize(instsance, files)
       @files = files
     end
 
