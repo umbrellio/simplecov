@@ -21,7 +21,7 @@ module SimpleCov
             "%<criterion>s coverage has dropped by %<drop_percent>.2f%% since the last time " \
             "(maximum allowed: %<max_drop>.2f%%).\n",
             criterion: violation[:criterion].capitalize,
-            drop_percent: SimpleCov.round_coverage(violation[:drop_percent]),
+            drop_percent: SimpleCov::Utils.round_coverage(violation[:drop_percent]),
             max_drop: violation[:max_drop]
           )
         end
@@ -62,7 +62,7 @@ module SimpleCov
       MAX_DROP_ACCURACY = 10
       def drop_percent(criterion)
         drop = last_coverage(criterion) -
-               SimpleCov.round_coverage(
+               SimpleCov::Utils.round_coverage(
                  result.coverage_statistics.fetch(criterion).percent
                )
 

@@ -22,33 +22,34 @@ end
 # Code coverage for ruby. Please check out README for a full introduction.
 #
 module SimpleCov
+  require_relative "simplecov/combine"
+  require_relative "simplecov/combine/branches_combiner"
+  require_relative "simplecov/combine/files_combiner"
+  require_relative "simplecov/combine/lines_combiner"
+  require_relative "simplecov/combine/methods_combiner"
+  require_relative "simplecov/combine/results_combiner"
+  require_relative "simplecov/command_guesser"
   require_relative "simplecov/configuration"
   require_relative "simplecov/coverage_statistics"
   require_relative "simplecov/exit_codes"
-  require_relative "simplecov/profiles"
-  require_relative "simplecov/source_file/line"
-  require_relative "simplecov/source_file/branch"
-  require_relative "simplecov/source_file/method"
-  require_relative "simplecov/source_file"
   require_relative "simplecov/file_list"
-  require_relative "simplecov/result"
   require_relative "simplecov/filter"
   require_relative "simplecov/formatter"
   require_relative "simplecov/last_run"
   require_relative "simplecov/lines_classifier"
+  require_relative "simplecov/profiles"
+  require_relative "simplecov/result_adapter"
   require_relative "simplecov/result_merger"
   require_relative "simplecov/result_serialization"
-  require_relative "simplecov/command_guesser"
-  require_relative "simplecov/version"
-  require_relative "simplecov/result_adapter"
-  require_relative "simplecov/combine"
-  require_relative "simplecov/combine/branches_combiner"
-  require_relative "simplecov/combine/methods_combiner"
-  require_relative "simplecov/combine/files_combiner"
-  require_relative "simplecov/combine/lines_combiner"
-  require_relative "simplecov/combine/results_combiner"
-  require_relative "simplecov/useless_results_remover"
+  require_relative "simplecov/result"
   require_relative "simplecov/simulate_coverage"
+  require_relative "simplecov/source_file"
+  require_relative "simplecov/source_file/branch"
+  require_relative "simplecov/source_file/line"
+  require_relative "simplecov/source_file/method"
+  require_relative "simplecov/useless_results_remover"
+  require_relative "simplecov/utils"
+  require_relative "simplecov/version"
 
   class Instance
     include SimpleCov::Configuration
@@ -317,7 +318,7 @@ module SimpleCov
     # @api private
     #
     def write_last_run(result)
-      data = result.coverage_statistics.transform_values { |x| SimpleCov.round_coverage(x.percent) }
+      data = result.coverage_statistics.transform_values { |x| SimpleCov::Utils.round_coverage(x.percent) }
       SimpleCov::LastRun.new(instance: self).write(result: data)
     end
 
@@ -470,14 +471,6 @@ module SimpleCov
 
     def build
       Instance.new
-    end
-
-    #
-    # @api private
-    #
-    # Rounding down to be extra strict, see #679
-    def round_coverage(coverage)
-      coverage.floor(2)
     end
 
     # Delegate all Instance methods to it
