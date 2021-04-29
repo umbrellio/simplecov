@@ -29,7 +29,7 @@ module SimpleCov
         combination
       end
 
-      private
+    private
 
       attr_reader :instance
     end

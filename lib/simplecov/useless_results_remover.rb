@@ -11,7 +11,8 @@ module SimpleCov
       end
     end
 
-    def self.root_regx # TODO[@tycooon]: use instance
+    # TODO[@tycooon]: use instance
+    def self.root_regx
       @root_regx ||= /\A#{Regexp.escape(SimpleCov.root + File::SEPARATOR)}/i.freeze
     end
   end

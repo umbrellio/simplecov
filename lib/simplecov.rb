@@ -66,6 +66,10 @@ module SimpleCov
     def method_missing(name, *args, **options, &block)
       instance.public_send(name, *args, **options, &block)
     end
+
+    def respond_to_missing?(name, include_private = false)
+      instance.respond_to?(name, include_private)
+    end
   end
 
   class Instance

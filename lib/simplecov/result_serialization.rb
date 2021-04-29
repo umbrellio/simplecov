@@ -3,7 +3,7 @@
 module SimpleCov
   class ResultSerialization
     class << self
-      def serialize(result, instance: SimpleCov.instance)
+      def serialize(result)
         coverage = {}
 
         result.original_result.each do |file_path, file_data|

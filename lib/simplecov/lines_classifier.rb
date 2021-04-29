@@ -12,7 +12,8 @@ module SimpleCov
     COMMENT_LINE = /^\s*#/.freeze
     WHITESPACE_OR_COMMENT_LINE = Regexp.union(WHITESPACE_LINE, COMMENT_LINE)
 
-    def self.no_cov_line # TODO[@tycooon]: use instance
+    # TODO[@tycooon]: use instance
+    def self.no_cov_line
       /^(\s*)#(\s*)(:#{SimpleCov.nocov_token}:)/o
     end
 

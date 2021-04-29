@@ -28,7 +28,7 @@ module SimpleCov
         end
       end
 
-      private
+    private
 
       attr_reader :instance
 
