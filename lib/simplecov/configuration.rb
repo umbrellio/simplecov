@@ -231,17 +231,16 @@ module SimpleCov
     #     end
     #
     def at_fork(&block)
-      # TODO[@tycooon]: fix
       @at_fork = block if block_given?
       @at_fork ||= lambda { |pid|
         # This needs a unique name so it won't be ovewritten
-        SimpleCov.command_name "#{SimpleCov.command_name} (subprocess: #{pid})"
+        command_name "#{command_name} (subprocess: #{pid})"
         # be quiet, the parent process will be in charge of using the regular formatter and checking coverage totals
-        SimpleCov.print_error_status = false
-        SimpleCov.formatter SimpleCov::Formatter::SimpleFormatter
-        SimpleCov.minimum_coverage 0
+        print_error_status = false
+        formatter SimpleCov::Formatter::SimpleFormatter
+        minimum_coverage 0
         # start
-        SimpleCov.start
+        start
       }
     end
 
