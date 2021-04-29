@@ -51,7 +51,7 @@ module SimpleCov
   require_relative "simplecov/simulate_coverage"
 
   class << self
-    # NOTE: method_missing produces warnings for stuff like `SimpleCov.groups = {}``
+    # NOTE: method_missing produces warnings for stuff like `SimpleCov.groups = {}` in Ruby 2.7
     extend Forwardable
     def_delegator :instance, :groups=
 
@@ -67,8 +67,8 @@ module SimpleCov
       instance.public_send(name, *args, **options, &block)
     end
 
-    def respond_to_missing?(name, include_private = false)
-      instance.respond_to?(name, include_private)
+    def respond_to_missing?(*args)
+      instance.respond_to?(*args)
     end
   end
 
@@ -493,7 +493,7 @@ module SimpleCov
       ENV["TEST_ENV_NUMBER"] && ENV["PARALLEL_TEST_GROUPS"]
     end
   end
-
-  # Load default config
-  require_relative "simplecov/defaults" unless ENV["SIMPLECOV_NO_DEFAULTS"]
 end
+
+# Load default config
+require_relative "simplecov/defaults" unless ENV["SIMPLECOV_NO_DEFAULTS"]
