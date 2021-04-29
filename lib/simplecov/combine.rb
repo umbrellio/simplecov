@@ -13,10 +13,10 @@ module SimpleCov
     # as it takes care of short-circuiting of one of the coverages is nil.
     #
     # @return [Hash]
-    def combine(combiner_module, coverage_a, coverage_b)
+    def combine(combiner, coverage_a, coverage_b)
       return existing_coverage(coverage_a, coverage_b) if empty_coverage?(coverage_a, coverage_b)
 
-      combiner_module.combine(coverage_a, coverage_b)
+      combiner.call(coverage_a, coverage_b)
     end
 
     def empty_coverage?(coverage_a, coverage_b)

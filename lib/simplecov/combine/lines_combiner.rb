@@ -2,14 +2,11 @@
 
 module SimpleCov
   module Combine
-    #
     # Combine two different lines coverage results on same file
-    #
-    # Should be called through `SimpleCov.combine`.
     module LinesCombiner
     module_function
 
-      def combine(coverage_a, coverage_b)
+      def call(coverage_a, coverage_b)
         coverage_a
           .zip(coverage_b)
           .map do |coverage_a_val, coverage_b_val|

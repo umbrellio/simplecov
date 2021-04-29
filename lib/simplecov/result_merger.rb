@@ -9,6 +9,10 @@ module SimpleCov
   # upon multiple test suites.
   #
   class ResultMerger
+    class << self
+      attr_accessor :resultset_locked
+    end
+
     attr_reader :instance
 
     def initialize(instance: SimpleCov.instance)
@@ -91,7 +95,8 @@ module SimpleCov
       return results.first if results.size == 1
 
       parsed_results = results.map(&:original_result)
-      combined_result = SimpleCov::Combine::ResultsCombiner.combine(*parsed_results)
+      combiner = SimpleCov::Combine::ResultsCombiner.new(instance: instance)
+      combined_result = combiner.call(*parsed_results)
       result = SimpleCov::Result.new(combined_result, instance: instance)
       result.command_name = results.map(&:command_name).reject(&:empty?).sort.join(", ")
       result
@@ -134,21 +139,32 @@ module SimpleCov
       true
     end
 
-    # Ensure only one process is reading or writing the resultset at any
-    # given time
+    # Ensure only one process is reading or writing the resultset at any given time
     def synchronize_resultset
-      # make it reentrant
-      return yield if defined?(@resultset_locked) && @resultset_locked
+      return yield if resultset_locked? # make it reentrant
 
       begin
-        @resultset_locked = true
+        lock_resultset!
+
         File.open(resultset_writelock, "w+") do |f|
           f.flock(File::LOCK_EX)
           yield
         end
       ensure
-        @resultset_locked = false
+        unlock_resultset!
       end
+    end
+
+    def resultset_locked?
+      !!self.class.resultset_locked
+    end
+
+    def lock_resultset!
+      self.class.resultset_locked = true
+    end
+
+    def unlock_resultset!
+      self.class.resultset_locked = false
     end
   end
 end

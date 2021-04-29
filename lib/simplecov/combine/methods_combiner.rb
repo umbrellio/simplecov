@@ -2,10 +2,7 @@
 
 module SimpleCov
   module Combine
-    #
     # Combine different method coverage results on single file.
-    #
-    # Should be called through `SimpleCov.combine`.
     module MethodsCombiner
     module_function
 
@@ -14,7 +11,7 @@ module SimpleCov
       #
       # @return [Hash]
       #
-      def combine(coverage_a, coverage_b)
+      def call(coverage_a, coverage_b)
         result_coverage = {}
 
         keys = (coverage_a.keys + coverage_b.keys).uniq

@@ -333,12 +333,14 @@ describe SimpleCov do
     end
 
     it "starts coverage in lines mode by default" do
+      expect(Coverage).to receive(:running?).and_return(false)
       expect(Coverage).to receive(:start).with(lines: true)
 
       SimpleCov.instance.send :start_coverage_measurement
     end
 
     it "starts coverage with lines and branches if branch coverage is activated" do
+      expect(Coverage).to receive(:running?).and_return(false)
       expect(Coverage).to receive(:start).with(lines: true, branches: true)
 
       SimpleCov.enable_coverage :branch
@@ -347,6 +349,7 @@ describe SimpleCov do
     end
 
     it "starts coverage with lines and methods if method coverage is activated" do
+      expect(Coverage).to receive(:running?).and_return(false) # TODO[@tycooon]: add spec for true
       expect(Coverage).to receive(:start).with(lines: true, methods: true)
 
       SimpleCov.enable_coverage :method

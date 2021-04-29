@@ -54,7 +54,7 @@ describe SimpleCov::Combine::ResultsCombiner do
 
     context "a merge" do
       subject do
-        SimpleCov::Combine::ResultsCombiner.combine(resultset1, resultset2, resultset3)
+        SimpleCov::Combine::ResultsCombiner.new.call(resultset1, resultset2, resultset3)
       end
 
       it "has proper results for sample.rb" do
@@ -120,7 +120,7 @@ describe SimpleCov::Combine::ResultsCombiner do
       source_fixture("sample.rb").freeze => {lines: [1, nil, 1, 1, nil, nil, 1, 1, nil, nil]}
     }
 
-    merged_result = SimpleCov::Combine::ResultsCombiner.combine(resultset1, resultset2)
+    merged_result = SimpleCov::Combine::ResultsCombiner.new.call(resultset1, resultset2)
     expect(merged_result.keys).to eq(resultset1.keys)
     expect(merged_result.values.map(&:frozen?)).to eq([false, false])
 

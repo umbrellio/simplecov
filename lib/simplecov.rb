@@ -388,6 +388,8 @@ module SimpleCov
       # :oneshot_lines - can not be combined with lines
       # :all - same as lines + branches + methods
       #
+      return if Coverage.running?
+
       if coverage_start_arguments_supported?
         start_coverage_with_criteria
       else

@@ -6,6 +6,9 @@ require "open3"
 # loaded before simplecov to also capture parse time warnings
 require "support/fail_rspec_on_ruby_warning"
 
+require "coverage"
+Coverage.start(lines: true, branches: true, methods: true)
+
 require "simplecov"
 
 simplecov = SimpleCov.build

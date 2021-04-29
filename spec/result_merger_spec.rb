@@ -323,13 +323,13 @@ describe SimpleCov::ResultMerger do
       $stdout.sync = true
       puts "running" # see `sleep`s in parent process
 
-      merger.synchronize_resultset do
+      SimpleCov::ResultMerger.new.synchronize_resultset do
         File.open(#{file.path.inspect}, "a") { |f| f.write("process 2\n") }
       end
       CODE
 
       # rubocop:disable Security/Open
-      other_process = open("|ruby -e #{Shellwords.escape(test_script)} 2>/dev/null")
+      other_process = open("|ruby -e #{Shellwords.escape(test_script)}")
       # rubocop:enable Security/Open
 
       merger.synchronize_resultset do

@@ -2,10 +2,7 @@
 
 module SimpleCov
   module Combine
-    #
     # Combine different branch coverage results on single file.
-    #
-    # Should be called through `SimpleCov.combine`.
     module BranchesCombiner
     module_function
 
@@ -20,7 +17,7 @@ module SimpleCov
       #
       # @return [Hash]
       #
-      def combine(coverage_a, coverage_b)
+      def call(coverage_a, coverage_b)
         coverage_a.merge(coverage_b) do |_condition, branches_inside_a, branches_inside_b|
           branches_inside_a.merge(branches_inside_b) do |_branch, a_count, b_count|
             a_count + b_count

@@ -7,8 +7,10 @@ module SimpleCov
     # into unified one. This class does that.
     # To unite the results on file basis, it leverages
     # the combine of lines and branches inside each file within given results.
-    module ResultsCombiner
-    module_function
+    class ResultsCombiner
+      def initialize(instance: SimpleCov.instance)
+        @instance = instance
+      end
 
       #
       # Combine process explanation
@@ -20,11 +22,15 @@ module SimpleCov
       #
       # @return [Hash]
       #
-      def combine(*results)
+      def call(*results)
         results.reduce({}) do |combined_results, next_result|
           combine_result_sets(combined_results, next_result)
         end
       end
+
+      private
+
+      attr_reader :instance
 
       #
       # Manage combining results on files level
@@ -54,7 +60,8 @@ module SimpleCov
       # @return [Hash]
       #
       def combine_file_coverage(coverage_a, coverage_b)
-        Combine.combine(Combine::FilesCombiner, coverage_a, coverage_b)
+        files_combiner = Combine::FilesCombiner.new(instance: instance)
+        Combine.combine(files_combiner, coverage_a, coverage_b)
       end
     end
   end
