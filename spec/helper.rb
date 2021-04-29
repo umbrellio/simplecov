@@ -6,8 +6,10 @@ require "open3"
 # loaded before simplecov to also capture parse time warnings
 require "support/fail_rspec_on_ruby_warning"
 
+# we have to start coverage ourself since we should do it before requiring any SimpleCov code
 require "coverage"
-Coverage.start(lines: true, branches: true, methods: true)
+coverage_args = Coverage.method(:start).arity.zero? ? [] : [:all]
+Coverage.start(*coverage_args)
 
 require "simplecov"
 
