@@ -51,6 +51,10 @@ module SimpleCov
   require_relative "simplecov/simulate_coverage"
 
   class << self
+    # NOTE: method_missing produces warnings for stuff like `SimpleCov.groups = {}``
+    extend Forwardable
+    def_delegator :instance, :groups=
+
     def instance
       @instance ||= build
     end
