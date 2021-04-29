@@ -5,8 +5,10 @@ require "tempfile"
 require "timeout"
 
 describe SimpleCov::ResultMerger do
+  subject(:merger) { described_class.new }
+
   after do
-    File.delete(SimpleCov::ResultMerger.resultset_path) if File.exist?(SimpleCov::ResultMerger.resultset_path)
+    File.delete(merger.resultset_path) if File.exist?(merger.resultset_path)
   end
 
   let(:resultset1) do
@@ -50,34 +52,34 @@ describe SimpleCov::ResultMerger do
   describe "resultset handling" do
     # See GitHub issue #6
     it "returns an empty hash when the resultset cache file is empty" do
-      File.open(SimpleCov::ResultMerger.resultset_path, "w+") { |f| f.puts "" }
-      expect(SimpleCov::ResultMerger.read_resultset).to be_empty
+      File.open(merger.resultset_path, "w+") { |f| f.puts "" }
+      expect(merger.read_resultset).to be_empty
     end
 
     # See GitHub issue #6
     it "returns an empty hash when the resultset cache file is not present" do
-      system "rm #{SimpleCov::ResultMerger.resultset_path}" if File.exist?(SimpleCov::ResultMerger.resultset_path)
-      expect(SimpleCov::ResultMerger.read_resultset).to be_empty
+      system "rm #{merger.resultset_path}" if File.exist?(merger.resultset_path)
+      expect(merger.read_resultset).to be_empty
     end
   end
 
   describe "basic workings with 2 resultsets" do
     before do
-      system "rm #{SimpleCov::ResultMerger.resultset_path}" if File.exist?(SimpleCov::ResultMerger.resultset_path)
-      SimpleCov::ResultMerger.store_result(result1)
-      SimpleCov::ResultMerger.store_result(result2)
+      system "rm #{merger.resultset_path}" if File.exist?(merger.resultset_path)
+      merger.store_result(result1)
+      merger.store_result(result2)
     end
 
     it "has stored data in resultset_path JSON file" do
-      expect(File.readlines(SimpleCov::ResultMerger.resultset_path).length).to be > 50
+      expect(File.readlines(merger.resultset_path).length).to be > 50
     end
 
     it "returns a hash containing keys ['result1' and 'result2'] for resultset" do
-      expect(SimpleCov::ResultMerger.read_resultset.keys.sort).to eq %w[result1 result2]
+      expect(merger.read_resultset.keys.sort).to eq %w[result1 result2]
     end
 
     it "returns proper values for merged_result" do
-      result = SimpleCov::ResultMerger.merged_result
+      result = merger.merged_result
 
       expect_resultset_1_and_2_merged(result.to_hash)
     end
@@ -86,12 +88,12 @@ describe SimpleCov::ResultMerger do
       let(:result2) { outdated(super()) }
 
       before do
-        SimpleCov::ResultMerger.store_result(result2)
+        merger.store_result(result2)
       end
 
-      it "has only one result in SimpleCov::ResultMerger.results" do
+      it "has only one result in merger.results" do
         # second result does not appear in the merged results
-        merged_coverage = SimpleCov::ResultMerger.merged_result
+        merged_coverage = merger.merged_result
 
         expect(merged_coverage.command_name).to eq "result1"
         expect(merged_coverage.original_result).to eq resultset1
@@ -116,14 +118,14 @@ describe SimpleCov::ResultMerger do
 
       context "2 normal results" do
         it "correctly merges the 2 results" do
-          result = SimpleCov::ResultMerger.merge_and_store(resultset1_path, resultset2_path)
+          result = merger.merge_and_store(resultset1_path, resultset2_path)
           expect_resultset_1_and_2_merged(result.to_hash)
         end
 
         it "has the result stored" do
-          SimpleCov::ResultMerger.merge_and_store(resultset1_path, resultset2_path)
+          merger.merge_and_store(resultset1_path, resultset2_path)
 
-          expect_resultset_1_and_2_merged(SimpleCov::ResultMerger.merged_result.to_hash)
+          expect_resultset_1_and_2_merged(merger.merged_result.to_hash)
         end
       end
 
@@ -131,7 +133,7 @@ describe SimpleCov::ResultMerger do
         let(:result1) { outdated(super()) }
 
         it "completely omits the result from the merge" do
-          result_hash = SimpleCov::ResultMerger.merge_and_store(resultset1_path, resultset2_path).to_hash
+          result_hash = merger.merge_and_store(resultset1_path, resultset2_path).to_hash
 
           expect(result_hash.keys).to eq ["result2"]
 
@@ -140,7 +142,7 @@ describe SimpleCov::ResultMerger do
         end
 
         it "includes it when we say ignore_timeout: true" do
-          result_hash = SimpleCov::ResultMerger.merge_and_store(resultset1_path, resultset2_path, ignore_timeout: true).to_hash
+          result_hash = merger.merge_and_store(resultset1_path, resultset2_path, ignore_timeout: true).to_hash
 
           expect_resultset_1_and_2_merged(result_hash)
         end
@@ -151,16 +153,16 @@ describe SimpleCov::ResultMerger do
         let(:result2) { outdated(super()) }
 
         it "completely omits the result from the merge" do
-          allow(SimpleCov::ResultMerger).to receive(:store)
+          allow(merger).to receive(:store)
 
-          result = SimpleCov::ResultMerger.merge_and_store(resultset1_path, resultset2_path)
+          result = merger.merge_and_store(resultset1_path, resultset2_path)
 
           expect(result).to eq nil
-          expect(SimpleCov::ResultMerger).not_to have_received(:store)
+          expect(merger).not_to have_received(:store)
         end
 
         it "includes both when we say ignore_timeout: true" do
-          result_hash = SimpleCov::ResultMerger.merge_and_store(resultset1_path, resultset2_path, ignore_timeout: true).to_hash
+          result_hash = merger.merge_and_store(resultset1_path, resultset2_path, ignore_timeout: true).to_hash
 
           expect_resultset_1_and_2_merged(result_hash)
         end
@@ -216,7 +218,7 @@ describe SimpleCov::ResultMerger do
         let(:resultset3_path) { "#{resultset_prefix}3.json" }
 
         it "correctly merges the 3 results" do
-          result = SimpleCov::ResultMerger.merge_and_store(
+          result = merger.merge_and_store(
             resultset1_path, resultset2_path, resultset3_path
           )
 
@@ -255,7 +257,7 @@ describe SimpleCov::ResultMerger do
       end
 
       it "gets the same content back but under \"lines\"" do
-        result = SimpleCov::ResultMerger.merge_and_store(file_path)
+        result = merger.merge_and_store(file_path)
 
         expect(result.original_result).to eq(
           source_fixture("three.rb") => {lines: [nil, 1, 2]}
@@ -266,29 +268,29 @@ describe SimpleCov::ResultMerger do
 
   describe ".store_result" do
     it "refreshes the resultset" do
-      set = SimpleCov::ResultMerger.read_resultset
-      SimpleCov::ResultMerger.store_result({})
-      new_set = SimpleCov::ResultMerger.read_resultset
+      set = merger.read_resultset
+      merger.store_result({})
+      new_set = merger.read_resultset
       expect(new_set).not_to be(set)
     end
 
     it "persists to disk" do
-      SimpleCov::ResultMerger.store_result("a" => [1])
+      merger.store_result("a" => [1])
 
-      new_set = SimpleCov::ResultMerger.read_resultset
+      new_set = merger.read_resultset
       expect(new_set).to eq("a" => [1])
     end
 
     it "synchronizes writes" do
-      expect(SimpleCov::ResultMerger).to receive(:synchronize_resultset)
-      SimpleCov::ResultMerger.store_result({})
+      expect(merger).to receive(:synchronize_resultset)
+      merger.store_result({})
     end
   end
 
   describe ".resultset" do
     it "synchronizes reads" do
-      expect(SimpleCov::ResultMerger).to receive(:synchronize_resultset)
-      SimpleCov::ResultMerger.read_resultset
+      expect(merger).to receive(:synchronize_resultset)
+      merger.read_resultset
     end
   end
 
@@ -298,8 +300,8 @@ describe SimpleCov::ResultMerger do
       # `.store_result` wouldn't work
       expect do
         Timeout.timeout(1) do
-          SimpleCov::ResultMerger.synchronize_resultset do
-            SimpleCov::ResultMerger.synchronize_resultset do
+          merger.synchronize_resultset do
+            merger.synchronize_resultset do
               # nothing
             end
           end
@@ -321,7 +323,7 @@ describe SimpleCov::ResultMerger do
       $stdout.sync = true
       puts "running" # see `sleep`s in parent process
 
-      SimpleCov::ResultMerger.synchronize_resultset do
+      merger.synchronize_resultset do
         File.open(#{file.path.inspect}, "a") { |f| f.write("process 2\n") }
       end
       CODE
@@ -330,7 +332,7 @@ describe SimpleCov::ResultMerger do
       other_process = open("|ruby -e #{Shellwords.escape(test_script)} 2>/dev/null")
       # rubocop:enable Security/Open
 
-      SimpleCov::ResultMerger.synchronize_resultset do
+      merger.synchronize_resultset do
         # wait until the child process is going, and then wait some more
         # so we can be sure it blocks on the lock we already have.
         sleep 0.1 until other_process.gets == "running\n"

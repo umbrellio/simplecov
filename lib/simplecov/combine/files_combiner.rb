@@ -14,7 +14,7 @@ module SimpleCov
       #
       # @return [Hash]
       #
-      def combine(cov_a, cov_b)
+      def combine(cov_a, cov_b) # TODO[@tycooon]: use instance
         combination = {}
 
         combination[:lines] = Combine.combine(LinesCombiner, cov_a[:lines], cov_b[:lines])

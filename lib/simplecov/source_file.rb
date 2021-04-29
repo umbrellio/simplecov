@@ -17,7 +17,7 @@ module SimpleCov
     end
 
     # The path to this source file relative to the projects directory
-    def project_filename
+    def project_filename # TODO[@tycooon]: use instance
       @filename.sub(Regexp.new("^#{Regexp.escape(SimpleCov.root)}"), "")
     end
 

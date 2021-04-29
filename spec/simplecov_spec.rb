@@ -4,10 +4,13 @@ require "helper"
 require "coverage"
 
 describe SimpleCov do
+  let(:merger) { double :merger }
+
   describe ".result" do
     before do
       SimpleCov.clear_result
       allow(Coverage).to receive(:result).once.and_return({})
+      allow(SimpleCov::ResultMerger).to receive(:new).and_return(merger)
     end
 
     context "with merging disabled" do
@@ -42,12 +45,12 @@ describe SimpleCov do
         end
 
         it "doesn't store the current coverage" do
-          expect(SimpleCov::ResultMerger).not_to receive(:store_result)
+          expect(merger).not_to receive(:store_result)
           SimpleCov.result
         end
 
         it "doesn't merge the result" do
-          expect(SimpleCov::ResultMerger).not_to receive(:merged_result)
+          expect(merger).not_to receive(:merged_result)
           SimpleCov.result
         end
 
@@ -63,8 +66,8 @@ describe SimpleCov do
 
       before do
         allow(SimpleCov.instance).to receive(:use_merging).once.and_return(true)
-        allow(SimpleCov::ResultMerger).to receive(:store_result).once
-        allow(SimpleCov::ResultMerger).to receive(:merged_result).once.and_return(the_merged_result)
+        allow(merger).to receive(:store_result).once
+        allow(merger).to receive(:merged_result).once.and_return(the_merged_result)
         expect(SimpleCov.instance).to receive(:wait_for_other_processes)
       end
 
@@ -94,7 +97,7 @@ describe SimpleCov do
         end
 
         it "stores the current coverage" do
-          expect(SimpleCov::ResultMerger).to receive(:store_result).once
+          expect(merger).to receive(:store_result).once
           SimpleCov.result
         end
 
@@ -198,7 +201,7 @@ describe SimpleCov do
       {source_fixture("sample.rb") => {lines: [1, nil, 1, 1, nil, nil, 1, 1, nil, nil]}}
     end
 
-    let(:resultset_path) { SimpleCov::ResultMerger.resultset_path }
+    let(:resultset_path) { SimpleCov::ResultMerger.new.resultset_path }
 
     let(:resultset_folder) { File.dirname(resultset_path) }
 
@@ -303,7 +306,7 @@ describe SimpleCov do
         result = SimpleCov::Result.new(resultset)
         result.command_name = name
         result.created_at = Time.now - 172_800 if outdated
-        SimpleCov::ResultMerger.store_result(result)
+        SimpleCov::ResultMerger.new.store_result(result)
         FileUtils.mv resultset_path, "#{resultset_path}#{name}.final"
       end
 

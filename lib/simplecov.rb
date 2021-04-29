@@ -102,10 +102,6 @@ module SimpleCov
       self.pid = Process.pid
 
       start_coverage_measurement
-
-      Kernel.at_exit do
-        at_exit_behavior unless external_at_exit?
-      end
     end
 
     #
@@ -138,7 +134,8 @@ module SimpleCov
       initial_setup(profile, &block)
 
       # Use the ResultMerger to produce a single, merged result, ready to use.
-      @result = ResultMerger.merge_and_store(*result_filenames, ignore_timeout: ignore_timeout)
+      merger = ResultMerger.new(instance: self)
+      @result = merger.merge_and_store(*result_filenames, ignore_timeout: ignore_timeout)
 
       run_exit_tasks!
     end
@@ -157,8 +154,9 @@ module SimpleCov
       # first (if there is one), then merge the results and return those
       if use_merging
         wait_for_other_processes
-        SimpleCov::ResultMerger.store_result(@result) if result?
-        @result = SimpleCov::ResultMerger.merged_result
+        merger = SimpleCov::ResultMerger.new(instance: self)
+        merger.store_result(@result) if result?
+        @result = merger.merged_result
       end
 
       @result
@@ -182,7 +180,7 @@ module SimpleCov
       filters.each do |filter|
         result = result.reject { |source_file| filter.matches?(source_file) }
       end
-      SimpleCov::FileList.new(self, result)
+      SimpleCov::FileList.new(result, instance: self)
     end
 
     #
@@ -192,11 +190,12 @@ module SimpleCov
       grouped = {}
       grouped_files = []
       groups.each do |name, filter|
-        grouped[name] = SimpleCov::FileList.new(files.select { |source_file| filter.matches?(source_file) })
+        filtered_files = files.select { |source_file| filter.matches?(source_file) }
+        grouped[name] = SimpleCov::FileList.new(filtered_files, instance: self)
         grouped_files += grouped[name]
       end
       if !groups.empty? && !(other_files = files.reject { |source_file| grouped_files.include?(source_file) }).empty?
-        grouped["Ungrouped"] = SimpleCov::FileList.new(other_files)
+        grouped["Ungrouped"] = SimpleCov::FileList.new(other_files, instance: self)
       end
       grouped
     end
@@ -332,10 +331,11 @@ module SimpleCov
     # @api private
     #
     def write_last_run(result)
-      SimpleCov::LastRun.write(result:
-        result.coverage_statistics.transform_values do |stats|
-          round_coverage(stats.percent)
-        end)
+      result_json = result.coverage_statistics.transform_values do |stats|
+        round_coverage(stats.percent)
+      end
+
+      SimpleCov::LastRun.write(result_json, instance: self)
     end
 
     #
@@ -466,7 +466,7 @@ module SimpleCov
     # @return [Hash]
     #
     def result_with_not_loaded_files
-      @result = SimpleCov::Result.new(add_not_loaded_files(@result))
+      @result = SimpleCov::Result.new(add_not_loaded_files(@result), instance: self)
     end
 
     # parallel_tests isn't always available, see: https://github.com/grosser/parallel_tests/issues/772

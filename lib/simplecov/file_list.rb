@@ -19,8 +19,9 @@ module SimpleCov
                    # still act like we're kinda an array
                    :to_a, :to_ary
 
-    def initialize(instsance, files)
+    def initialize(files, instance: SimpleCov.instance)
       @files = files
+      @instance = instance
     end
 
     def coverage_statistics
@@ -123,18 +124,20 @@ module SimpleCov
 
   private
 
+    attr_reader :instance
+
     def compute_coverage_statistics_by_file
       @files.each_with_object(line: [], branch: [], method: []) do |file, together|
         together[:line] << file.coverage_statistics.fetch(:line)
-        together[:branch] << file.coverage_statistics.fetch(:branch) if SimpleCov.branch_coverage?
-        together[:method] << file.coverage_statistics.fetch(:method) if SimpleCov.method_coverage?
+        together[:branch] << file.coverage_statistics.fetch(:branch) if instance.branch_coverage?
+        together[:method] << file.coverage_statistics.fetch(:method) if instance.method_coverage?
       end
     end
 
     def compute_coverage_statistics
       coverage_statistics = {line: CoverageStatistics.from(coverage_statistics_by_file[:line])}
-      coverage_statistics[:branch] = CoverageStatistics.from(coverage_statistics_by_file[:branch]) if SimpleCov.branch_coverage?
-      coverage_statistics[:method] = CoverageStatistics.from(coverage_statistics_by_file[:method]) if SimpleCov.method_coverage?
+      coverage_statistics[:branch] = CoverageStatistics.from(coverage_statistics_by_file[:branch]) if instance.branch_coverage?
+      coverage_statistics[:method] = CoverageStatistics.from(coverage_statistics_by_file[:method]) if instance.method_coverage?
       coverage_statistics
     end
   end

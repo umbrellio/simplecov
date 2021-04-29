@@ -19,7 +19,7 @@ module SimpleCov
           $stderr.printf(
             "%<criterion>s coverage has dropped by %<drop_percent>.2f%% since the last time (maximum allowed: %<max_drop>.2f%%).\n",
             criterion: violation[:criterion].capitalize,
-            drop_percent: SimpleCov.round_coverage(violation[:drop_percent]),
+            drop_percent: SimpleCov.round_coverage(violation[:drop_percent]), # TODO[@tycooon]: move round_coverage to separate module
             max_drop: violation[:max_drop]
           )
         end

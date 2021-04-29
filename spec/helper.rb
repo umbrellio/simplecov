@@ -11,12 +11,15 @@ require "simplecov"
 simplecov = SimpleCov.build
 
 simplecov.start do
+  formatter SimpleCov::Formatter::HTMLFormatter
   add_filter "/spec/"
   track_files "lib/**/*.rb"
   enable_coverage :line
   enable_coverage :branch
   enable_coverage :method
 end
+
+Kernel.at_exit { simplecov.at_exit_behavior }
 
 SimpleCov.coverage_dir("tmp/coverage")
 

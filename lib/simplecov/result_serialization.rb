@@ -3,7 +3,7 @@
 module SimpleCov
   class ResultSerialization
     class << self
-      def serialize(result)
+      def serialize(result, instance: SimpleCov.instance)
         coverage = {}
 
         result.original_result.each do |file_path, file_data|
@@ -20,7 +20,7 @@ module SimpleCov
         {result.command_name => data}
       end
 
-      def deserialize(hash) # rubocop:disable Metrics/MethodLength
+      def deserialize(hash, instance: SimpleCov.instance) # rubocop:disable Metrics/MethodLength
         hash.map do |command_name, data|
           coverage = {}
 
@@ -37,7 +37,7 @@ module SimpleCov
             coverage[file_name] = parsed_file_data
           end
 
-          result = SimpleCov::Result.new(coverage)
+          result = SimpleCov::Result.new(coverage, instance: instance)
           result.command_name = command_name
           result.created_at = Time.at(data.fetch("timestamp"))
           result

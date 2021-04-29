@@ -29,7 +29,7 @@ module SimpleCov
       name = name.to_sym
       raise "Could not find SimpleCov Profile called '#{name}'" unless key?(name)
 
-      SimpleCov.configure(&self[name])
+      SimpleCov.configure(&self[name]) # TODO[@tycooon]: use instance?
     end
   end
 end

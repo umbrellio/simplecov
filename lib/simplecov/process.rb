@@ -3,6 +3,7 @@
 module Process
   class << self
     def fork_with_simplecov(&block)
+      # TODO[@tycooon]: use instance?
       if defined?(SimpleCov) && SimpleCov.running
         fork_without_simplecov do
           SimpleCov.at_fork.call(Process.pid)
