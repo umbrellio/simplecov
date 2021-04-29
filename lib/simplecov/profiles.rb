@@ -8,7 +8,15 @@ module SimpleCov
   #     # SimpleCov configuration here, same as in  SimpleCov.configure
   #   end
   #
-  class Profiles < Hash
+  class Profiles
+    def initialize(instance: SimpleCov.instance)
+      @instance = instance
+    end
+
+    def [](key)
+      storage[key]
+    end
+
     #
     # Define a SimpleCov profile:
     #   SimpleCov.profiles.define 'rails' do
@@ -17,9 +25,9 @@ module SimpleCov
     #
     def define(name, &blk)
       name = name.to_sym
-      raise "SimpleCov Profile '#{name}' is already defined" unless self[name].nil?
+      raise "SimpleCov Profile '#{name}' is already defined" unless storage[name].nil?
 
-      self[name] = blk
+      storage[name] = blk
     end
 
     #
@@ -27,9 +35,17 @@ module SimpleCov
     #
     def load(name)
       name = name.to_sym
-      raise "Could not find SimpleCov Profile called '#{name}'" unless key?(name)
+      raise "Could not find SimpleCov Profile called '#{name}'" unless storage.key?(name)
 
-      SimpleCov.configure(&self[name]) # TODO[@tycooon]: use instance?
+      instance.configure(&storage[name])
+    end
+
+  private
+
+    attr_reader :instance
+
+    def storage
+      @storage ||= {}
     end
   end
 end

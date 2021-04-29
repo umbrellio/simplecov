@@ -6,24 +6,31 @@ RSpec.describe SimpleCov::ExitCodes::MaximumCoverageDropCheck do
   let(:result) do
     instance_double(SimpleCov::Result, coverage_statistics: stats)
   end
+
   let(:stats) do
     {
       line: SimpleCov::CoverageStatistics.new(covered: 8, missed: 2),
       branch: SimpleCov::CoverageStatistics.new(covered: 8, missed: 2)
     }
   end
+
   let(:last_run) do
     {
       result: last_coverage
     }
   end
+
   let(:last_coverage) { {line: 80.0, branch: 80.0} }
   let(:maximum_coverage_drop) { {line: 0, branch: 0} }
+
   subject { described_class.new(result, maximum_coverage_drop) }
 
-  before :each do
-    expect(SimpleCov::LastRun).to receive(:read).and_return(last_run)
+  before do
+    expect(SimpleCov::LastRun).to receive(:new).and_return(last_run_double)
+    expect(last_run_double).to receive(:read).and_return(last_run)
   end
+
+  let(:last_run_double) { double :last_run }
 
   context "we're at the same coverage" do
     it { is_expected.not_to be_failing }

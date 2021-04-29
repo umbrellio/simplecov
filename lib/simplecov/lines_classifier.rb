@@ -12,19 +12,22 @@ module SimpleCov
     COMMENT_LINE = /^\s*#/.freeze
     WHITESPACE_OR_COMMENT_LINE = Regexp.union(WHITESPACE_LINE, COMMENT_LINE)
 
-    # TODO[@tycooon]: use instance
-    def self.no_cov_line
-      /^(\s*)#(\s*)(:#{SimpleCov.nocov_token}:)/o
+    def initialize(instance: SimpleCov.instance)
+      @instance = instance
     end
 
-    def self.no_cov_line?(line)
+    def no_cov_line
+      /^(\s*)#(\s*)(:#{instance.nocov_token}:)/o
+    end
+
+    def no_cov_line?(line)
       no_cov_line.match?(line)
     rescue ArgumentError
       # E.g., line contains an invalid byte sequence in UTF-8
       false
     end
 
-    def self.whitespace_line?(line)
+    def whitespace_line?(line)
       WHITESPACE_OR_COMMENT_LINE.match?(line)
     rescue ArgumentError
       # E.g., line contains an invalid byte sequence in UTF-8
@@ -35,15 +38,19 @@ module SimpleCov
       skipping = false
 
       lines.map do |line|
-        if self.class.no_cov_line?(line)
+        if no_cov_line?(line)
           skipping = !skipping
           NOT_RELEVANT
-        elsif skipping || self.class.whitespace_line?(line)
+        elsif skipping || whitespace_line?(line)
           NOT_RELEVANT
         else
           RELEVANT
         end
       end
     end
+
+  private
+
+    attr_reader :instance
   end
 end

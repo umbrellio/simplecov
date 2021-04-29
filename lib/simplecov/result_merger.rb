@@ -3,11 +3,8 @@
 require "json"
 
 module SimpleCov
-  # TODO[@tycooon]: update comments
-  # Singleton that is responsible for caching, loading and merging
-  # SimpleCov::Results into a single result for coverage analysis based
-  # upon multiple test suites.
-  #
+  # Class that is responsible for caching, loading and merging SimpleCov::Results
+  # into a single result for coverage analysis based upon multiple test suites
   class ResultMerger
     class << self
       attr_accessor :resultset_locked

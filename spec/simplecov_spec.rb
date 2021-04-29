@@ -165,7 +165,6 @@ describe SimpleCov do
             line: double("statistics", percent: 100.0)
           )
           allow(result).to receive(:covered_percentages).and_return([])
-          allow(SimpleCov::LastRun).to receive(:read).and_return(nil)
         end
 
         it "return SimpleCov::ExitCodes::SUCCESS" do
@@ -349,12 +348,21 @@ describe SimpleCov do
     end
 
     it "starts coverage with lines and methods if method coverage is activated" do
-      expect(Coverage).to receive(:running?).and_return(false) # TODO[@tycooon]: add spec for true
+      expect(Coverage).to receive(:running?).and_return(false)
       expect(Coverage).to receive(:start).with(lines: true, methods: true)
 
       SimpleCov.enable_coverage :method
 
       SimpleCov.instance.send :start_coverage_measurement
+    end
+
+    context "coverage already started" do
+      it "doesn't start coverage" do
+        expect(Coverage).to receive(:running?).and_return(true)
+        expect(Coverage).not_to receive(:start)
+
+        SimpleCov.instance.send :start_coverage_measurement
+      end
     end
   end
 end

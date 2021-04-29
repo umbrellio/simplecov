@@ -155,7 +155,7 @@ module SimpleCov
     # Returns the hash of available profiles
     #
     def profiles
-      @profiles ||= SimpleCov::Profiles.new
+      @profiles ||= SimpleCov::Profiles.new(instance: self)
     end
 
     def adapters
@@ -236,10 +236,9 @@ module SimpleCov
         # This needs a unique name so it won't be ovewritten
         command_name "#{command_name} (subprocess: #{pid})"
         # be quiet, the parent process will be in charge of using the regular formatter and checking coverage totals
-        print_error_status = false
+        self.print_error_status = false
         formatter SimpleCov::Formatter::SimpleFormatter
         minimum_coverage 0
-        # start
         start
       }
     end

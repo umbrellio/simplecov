@@ -3,9 +3,10 @@
 module SimpleCov
   module ExitCodes
     class MaximumCoverageDropCheck
-      def initialize(result, maximum_coverage_drop)
+      def initialize(result, maximum_coverage_drop, instance: SimpleCov.instance)
         @result = result
         @maximum_coverage_drop = maximum_coverage_drop
+        @instance = instance
       end
 
       def failing?
@@ -17,9 +18,10 @@ module SimpleCov
       def report
         coverage_drop_violations.each do |violation|
           $stderr.printf(
-            "%<criterion>s coverage has dropped by %<drop_percent>.2f%% since the last time (maximum allowed: %<max_drop>.2f%%).\n",
+            "%<criterion>s coverage has dropped by %<drop_percent>.2f%% since the last time " \
+            "(maximum allowed: %<max_drop>.2f%%).\n",
             criterion: violation[:criterion].capitalize,
-            drop_percent: SimpleCov.round_coverage(violation[:drop_percent]), # TODO[@tycooon]: move round_coverage to separate module
+            drop_percent: SimpleCov.round_coverage(violation[:drop_percent]),
             max_drop: violation[:max_drop]
           )
         end
@@ -31,12 +33,12 @@ module SimpleCov
 
     private
 
-      attr_reader :result, :maximum_coverage_drop
+      attr_reader :result, :maximum_coverage_drop, :instance
 
       def last_run
         return @last_run if defined?(@last_run)
 
-        @last_run = SimpleCov::LastRun.read
+        @last_run = SimpleCov::LastRun.new(instance: instance).read
       end
 
       def coverage_drop_violations

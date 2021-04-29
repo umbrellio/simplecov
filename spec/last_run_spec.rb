@@ -3,7 +3,7 @@
 require "helper"
 
 describe SimpleCov::LastRun do
-  subject { SimpleCov::LastRun }
+  subject { SimpleCov::LastRun.new }
 
   it "defines a last_run_path" do
     expect(subject.last_run_path).to include "tmp/coverage/.last_run.json"

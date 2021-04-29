@@ -5,15 +5,12 @@ module SimpleCov
   # Select the files that related to working scope directory of SimpleCov
   #
   module UselessResultsRemover
-    def self.call(coverage_result)
+    def self.call(coverage_result, instance: SimpleCov.instance)
+      root_regx = /\A#{Regexp.escape(instance.root + File::SEPARATOR)}/i.freeze
+
       coverage_result.select do |path, _coverage|
         path =~ root_regx
       end
-    end
-
-    # TODO[@tycooon]: use instance
-    def self.root_regx
-      @root_regx ||= /\A#{Regexp.escape(SimpleCov.root + File::SEPARATOR)}/i.freeze
     end
   end
 end

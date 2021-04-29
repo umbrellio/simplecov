@@ -293,7 +293,7 @@ module SimpleCov
         maximum_coverage_drop: maximum_coverage_drop
       )
 
-      ExitCodes::ExitCodeHandling.call(result, coverage_limits: coverage_limits)
+      ExitCodes::ExitCodeHandling.call(result, instance: self, coverage_limits: coverage_limits)
     end
 
     #
@@ -317,17 +317,8 @@ module SimpleCov
     # @api private
     #
     def write_last_run(result)
-      data = result.coverage_statistics.transform_values { |x| round_coverage(x.percent) }
-      result_json = {result: data}
-      SimpleCov::LastRun.write(result_json, instance: self)
-    end
-
-    #
-    # @api private
-    #
-    # Rounding down to be extra strict, see #679
-    def round_coverage(coverage)
-      coverage.floor(2)
+      data = result.coverage_statistics.transform_values { |x| SimpleCov.round_coverage(x.percent) }
+      SimpleCov::LastRun.new(instance: self).write(result: data)
     end
 
   private
@@ -442,7 +433,7 @@ module SimpleCov
     # @return [Hash]
     #
     def remove_useless_results
-      @result = SimpleCov::UselessResultsRemover.call(@result)
+      @result = SimpleCov::UselessResultsRemover.call(@result, instance: self)
     end
 
     #
@@ -479,6 +470,14 @@ module SimpleCov
 
     def build
       Instance.new
+    end
+
+    #
+    # @api private
+    #
+    # Rounding down to be extra strict, see #679
+    def round_coverage(coverage)
+      coverage.floor(2)
     end
 
     # Delegate all Instance methods to it

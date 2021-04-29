@@ -10,16 +10,18 @@ module SimpleCov
     attr_reader :filename
     # The array of coverage data received from the Coverage.result
     attr_reader :coverage_data
+    # Instance of SimpleCov
+    attr_reader :instance
 
-    def initialize(filename, coverage_data)
+    def initialize(filename, coverage_data, instance: SimpleCov.instance)
       @filename = filename
       @coverage_data = coverage_data
+      @instance = instance
     end
 
     # The path to this source file relative to the projects directory
-    # TODO[@tycooon]: use instance
     def project_filename
-      @filename.sub(Regexp.new("^#{Regexp.escape(SimpleCov.root)}"), "")
+      @filename.sub(Regexp.new("^#{Regexp.escape(instance.root)}"), "")
     end
 
     # The source code for this file. Aliased as :source
@@ -178,13 +180,19 @@ module SimpleCov
 
   private
 
+    def lines_classifier
+      @lines_classifier ||= LinesClassifier.new(instance: instance)
+    end
+
     # no_cov_chunks is zero indexed to work directly with the array holding the lines
     def no_cov_chunks
       @no_cov_chunks ||= build_no_cov_chunks
     end
 
     def build_no_cov_chunks
-      no_cov_lines = src.map.with_index(1).select { |line_src, _index| LinesClassifier.no_cov_line?(line_src) }
+      no_cov_lines = src.map.with_index(1).select do |line_src, _index|
+        lines_classifier.no_cov_line?(line_src)
+      end
 
       # if we have an uneven number of nocovs we assume they go to the
       # end of the file, the source doesn't really matter

@@ -3,27 +3,28 @@
 require "json"
 
 module SimpleCov
-  module LastRun
-    # TODO[@tycooon]: use class
-    class << self
-      def last_run_path(instance: SimpleCov.instance)
-        File.join(instance.coverage_path, ".last_run.json")
-      end
+  class LastRun
+    attr_reader :instance
 
-      def read(instance: SimpleCov.instance)
-        return nil unless File.exist?(last_run_path(instance: instance))
+    def initialize(instance: SimpleCov.instance)
+      @instance = instance
+    end
 
-        json = File.read(last_run_path)
-        return nil if json.strip.empty?
+    def last_run_path
+      File.join(instance.coverage_path, ".last_run.json")
+    end
 
-        JSON.parse(json, symbolize_names: true)
-      end
+    def read
+      return nil unless File.exist?(last_run_path)
 
-      def write(json, instance: SimpleCov.instance)
-        File.open(last_run_path(instance: instance), "w+") do |f|
-          f.puts JSON.pretty_generate(json)
-        end
-      end
+      json = File.read(last_run_path)
+      return nil if json.strip.empty?
+
+      JSON.parse(json, symbolize_names: true)
+    end
+
+    def write(json)
+      File.write(last_run_path, JSON.pretty_generate(json))
     end
   end
 end

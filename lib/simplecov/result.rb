@@ -38,7 +38,7 @@ module SimpleCov
       @created_at = created_at
 
       source_files = result.map do |filename, coverage|
-        SimpleCov::SourceFile.new(filename, coverage) if File.file?(filename)
+        SimpleCov::SourceFile.new(filename, coverage, instance: instance) if File.file?(filename)
       end
 
       @files = SimpleCov::FileList.new(source_files.compact.sort_by(&:filename), instance: instance)
