@@ -10,10 +10,11 @@ Feature:
   Scenario:
     Given SimpleCov for RSpec is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
+
       SimpleCov.start do
-        add_group 'Libs', 'lib/faked_project/'
-        add_filter '/spec/'
+        add_group "Libs", "lib/faked_project/"
+        add_filter "/spec/"
       end
       """
 

@@ -9,15 +9,15 @@ Feature:
     Given I'm working on the project "faked_project"
     Given SimpleCov for Test/Unit is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
       """
 
   Scenario: Inside start block
     Given a file named ".simplecov" with:
       """
       SimpleCov.start do
-        add_filter 'test'
-        command_name 'Config Test Runner'
+        add_filter "test"
+        command_name "Config Test Runner"
       end
       """
 
@@ -28,10 +28,10 @@ Feature:
   Scenario: Inside start block, using instance var from outside
     Given a file named ".simplecov" with:
       """
-      @filter = 'test'
+      @filter = "test"
       SimpleCov.start do
         add_filter @filter
-        command_name 'Config Test Runner'
+        command_name "Config Test Runner"
       end
       """
 
@@ -42,10 +42,10 @@ Feature:
   Scenario: Inside start block, using local var from outside
     Given a file named ".simplecov" with:
       """
-      filter = 'test'
+      filter = "test"
       SimpleCov.start do
         add_filter filter
-        command_name 'Config Test Runner'
+        command_name "Config Test Runner"
       end
       """
 
@@ -56,8 +56,8 @@ Feature:
   Scenario: Explicitly before start block
     Given a file named ".simplecov" with:
       """
-      SimpleCov.add_filter 'test'
-      SimpleCov.command_name 'Config Test Runner'
+      SimpleCov.add_filter "test"
+      SimpleCov.command_name "Config Test Runner"
       SimpleCov.start
       """
 
@@ -69,8 +69,8 @@ Feature:
     Given a file named ".simplecov" with:
       """
       SimpleCov.start
-      SimpleCov.add_filter 'test'
-      SimpleCov.command_name 'Config Test Runner'
+      SimpleCov.add_filter "test"
+      SimpleCov.command_name "Config Test Runner"
       """
 
     When I open the coverage report generated with `bundle exec rake test`
@@ -82,8 +82,8 @@ Feature:
       """
       SimpleCov.start
       SimpleCov.configure do
-        add_filter 'test'
-        command_name 'Config Test Runner'
+        add_filter "test"
+        command_name "Config Test Runner"
       end
       """
 
@@ -95,8 +95,8 @@ Feature:
     Given a file named ".simplecov" with:
       """
       SimpleCov.configure do
-        add_filter 'test'
-        command_name 'Config Test Runner'
+        add_filter "test"
+        command_name "Config Test Runner"
       end
       SimpleCov.start
       """
@@ -109,10 +109,10 @@ Feature:
     Given a file named ".simplecov" with:
       """
       SimpleCov.configure do
-        command_name 'Config Test Runner'
+        command_name "Config Test Runner"
       end
       SimpleCov.start do
-        add_filter 'test'
+        add_filter "test"
       end
       """
 

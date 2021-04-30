@@ -9,19 +9,19 @@ Feature:
     Given I'm working on the project "faked_project"
     And SimpleCov for Test/Unit is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
       """
 
   Scenario: Defining and using a custom profile
     Given a file named ".simplecov" with:
       """
-      SimpleCov.profiles.define 'custom_command' do
+      SimpleCov.profiles.define "custom_command" do
         command_name "Profile Command"
       end
 
       SimpleCov.start do
-        load_profile 'test_frameworks'
-        load_profile 'custom_command'
+        load_profile "test_frameworks"
+        load_profile "custom_command"
       end
       """
 
@@ -32,12 +32,12 @@ Feature:
   Scenario: Using existing profile in custom profile and supplying profile to start command
     Given a file named ".simplecov" with:
       """
-      SimpleCov.profiles.define 'my_profile' do
-        load_profile 'test_frameworks'
+      SimpleCov.profiles.define "my_profile" do
+        load_profile "test_frameworks"
         command_name "My Profile"
       end
 
-      SimpleCov.start 'my_profile'
+      SimpleCov.start "my_profile"
       """
 
     When I open the coverage report generated with `bundle exec rake test`

@@ -9,7 +9,8 @@ Feature:
   Scenario:
     Given SimpleCov for Minitest is configured with:
       """
-      require "simplecov"
+      require "setup_cucumber_feature_coverage"
+
       SimpleCov.start do
         add_filter "test_helper.rb"
       end
@@ -28,7 +29,7 @@ Feature:
   Scenario:
     Given SimpleCov for Minitest is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
       SimpleCov.start
       """
 

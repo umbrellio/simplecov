@@ -10,10 +10,11 @@ Feature:
   Scenario:
     Given SimpleCov for Test/Unit is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
+
       SimpleCov.start do
-        add_group 'Libs', 'lib/faked_project/'
-        add_filter '/test/'
+        add_group "Libs", "lib/faked_project/"
+        add_filter "/test/"
       end
       """
 

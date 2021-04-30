@@ -10,9 +10,10 @@ Feature:
   Scenario: maximum_coverage_drop configured can cause spec failure
     Given SimpleCov for Test/Unit is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
+
       SimpleCov.start do
-        add_filter 'test.rb'
+        add_filter "test.rb"
         maximum_coverage_drop 3.14
       end
       """
@@ -48,9 +49,10 @@ Feature:
   Scenario: maximum_coverage_drop not configured updates resultset
     Given SimpleCov for Test/Unit is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
+
       SimpleCov.start do
-        add_filter 'test.rb'
+        add_filter "test.rb"
       end
       """
 
@@ -92,10 +94,11 @@ Feature:
   Scenario: test failures do not update the resultset
     Given SimpleCov for RSpec is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
+
       SimpleCov.start do
-        add_group 'Libs', 'lib/faked_project/'
-        add_filter '/spec/'
+        add_group "Libs", "lib/faked_project/"
+        add_filter "/spec/"
         maximum_coverage_drop 0
       end
       """
@@ -144,9 +147,9 @@ Feature:
   Scenario: When the previous last_run file has legacy covered_percent it still works
     Given SimpleCov for Test/Unit is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
       SimpleCov.start do
-        add_filter 'test.rb'
+        add_filter "test.rb"
         maximum_coverage_drop 0
       end
       """
@@ -174,10 +177,10 @@ Feature:
   Scenario: When the previous last_run file has covered_percent and we fail does not update it
     Given SimpleCov for RSpec is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
       SimpleCov.start do
-        add_group 'Libs', 'lib/faked_project/'
-        add_filter '/spec/'
+        add_group "Libs", "lib/faked_project/"
+        add_filter "/spec/"
         maximum_coverage_drop 0
       end
       """
@@ -227,9 +230,9 @@ Feature:
   Scenario: Works together with branch coverage and line coverage, announcing both failures
     Given SimpleCov for Test/Unit is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
       SimpleCov.start do
-        add_filter 'test.rb'
+        add_filter "test.rb"
         enable_coverage :branch
         maximum_coverage_drop line: 0, branch: 0
       end
@@ -274,9 +277,9 @@ Feature:
   Scenario: Can set branch as primary coverage and it will fail if branch is below maximum coverage drop
     Given SimpleCov for Test/Unit is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
       SimpleCov.start do
-        add_filter 'test.rb'
+        add_filter "test.rb"
         enable_coverage :branch
         primary_coverage :branch
         maximum_coverage_drop 0
@@ -321,9 +324,9 @@ Feature:
   Scenario: Can set branch as primary coverage and it will fail if branch is below maximum coverage drop
     Given SimpleCov for Test/Unit is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
       SimpleCov.start do
-        add_filter 'test.rb'
+        add_filter "test.rb"
         enable_coverage :branch
 	      primary_coverage :branch
 	      maximum_coverage_drop line: 0, branch: 0

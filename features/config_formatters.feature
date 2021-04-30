@@ -16,13 +16,16 @@ Feature:
   Scenario: With SimpleFormatter
     Given SimpleCov for Test/Unit is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
+
       SimpleCov.formatter = SimpleCov::Formatter::SimpleFormatter
+
       SimpleCov.at_exit do
         puts SimpleCov.result.format!
       end
+
       SimpleCov.start do
-        add_group 'Libs', 'lib/faked_project/'
+        add_group "Libs", "lib/faked_project/"
       end
       """
 
@@ -32,7 +35,8 @@ Feature:
   Scenario: With MultiFormatter
     Given SimpleCov for Test/Unit is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
+
       SimpleCov.formatters = [
         SimpleCov::Formatter::SimpleFormatter,
         Class.new do
@@ -45,8 +49,9 @@ Feature:
       SimpleCov.at_exit do
         puts SimpleCov.result.format!.join
       end
+
       SimpleCov.start do
-        add_group 'Libs', 'lib/faked_project/'
+        add_group "Libs", "lib/faked_project/"
       end
       """
 
@@ -57,7 +62,8 @@ Feature:
   Scenario: With multiple formatters
     Given SimpleCov for Test/Unit is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
+
       SimpleCov.formatters = [
         SimpleCov::Formatter::SimpleFormatter,
         Class.new do
@@ -70,8 +76,9 @@ Feature:
       SimpleCov.at_exit do
         puts SimpleCov.result.format!.join
       end
+
       SimpleCov.start do
-        add_group 'Libs', 'lib/faked_project/'
+        add_group "Libs", "lib/faked_project/"
       end
       """
 

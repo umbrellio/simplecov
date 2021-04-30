@@ -12,15 +12,17 @@ Feature: Grouping on Test/Unit using a custom filter class
   Scenario:
     Given SimpleCov for Test/Unit is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
+
       class CoverageFilter < SimpleCov::Filter
         def matches?(source_file)
           source_file.covered_percent < filter_argument
         end
       end
+
       SimpleCov.start do
-        add_group 'By filter class', CoverageFilter.new(90)
-        add_group 'By string', 'project/meta_magic'
+        add_group "By filter class", CoverageFilter.new(90)
+        add_group "By string", "project/meta_magic"
       end
       """
 

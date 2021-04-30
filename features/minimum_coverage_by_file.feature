@@ -9,9 +9,10 @@ Feature:
   Scenario: slightly under minimum coverage by file
     Given SimpleCov for Test/Unit is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
+
       SimpleCov.start do
-        add_filter 'test.rb'
+        add_filter "test.rb"
         minimum_coverage_by_file 75.01
       end
       """
@@ -24,9 +25,10 @@ Feature:
   Scenario: Just passing it
     Given SimpleCov for Test/Unit is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
+
       SimpleCov.start do
-        add_filter 'test.rb'
+        add_filter "test.rb"
         minimum_coverage_by_file 75
       end
       """
@@ -38,9 +40,10 @@ Feature:
   Scenario: Works together with branch coverage and the new criterion announcing both failures
     Given SimpleCov for Test/Unit is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
+
       SimpleCov.start do
-        add_filter 'test.rb'
+        add_filter "test.rb"
         enable_coverage :branch
         minimum_coverage_by_file line: 90, branch: 70
       end
@@ -56,9 +59,10 @@ Feature:
   Scenario: Can set branch as primary coverage and it will fail if branch is below minimum coverage
     Given SimpleCov for Test/Unit is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
+
       SimpleCov.start do
-        add_filter 'test.rb'
+        add_filter "test.rb"
         enable_coverage :branch
         primary_coverage :branch
         minimum_coverage_by_file 70

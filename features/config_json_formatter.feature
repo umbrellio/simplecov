@@ -11,14 +11,17 @@ Feature:
   Scenario: With JSONFormatter
     Given SimpleCov for Test/Unit is configured with:
       """
-      require 'simplecov'
-      require 'simplecov_json_formatter'
+      require "setup_cucumber_feature_coverage"
+      require "simplecov_json_formatter"
+
       SimpleCov.formatter = SimpleCov::Formatter::JSONFormatter
+
       SimpleCov.at_exit do
         puts SimpleCov.result.format!
       end
+
       SimpleCov.start do
-        add_group 'Libs', 'lib/faked_project/'
+        add_group "Libs", "lib/faked_project/"
       end
       """
 
@@ -29,12 +32,14 @@ Feature:
   Scenario: When CC_TEST_REPORTER_ID is set in the environment
     Given SimpleCov for Test/Unit is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
+
       SimpleCov.at_exit do
         puts SimpleCov.result.format!
       end
+
       SimpleCov.start do
-        add_group 'Libs', 'lib/faked_project/'
+        add_group "Libs", "lib/faked_project/"
       end
       """
     And I set the environment variables to:

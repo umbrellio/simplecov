@@ -10,7 +10,8 @@ Feature:
   Scenario:
     Given SimpleCov for Test/Unit is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
+
       SimpleCov.start do
         track_files "lib/**/*.rb"
       end

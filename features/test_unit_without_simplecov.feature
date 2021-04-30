@@ -13,7 +13,8 @@ Feature:
   Scenario: Configured, but not started
     Given SimpleCov for Test/Unit is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
+
       SimpleCov.configure do
         add_filter 'somefilter'
       end

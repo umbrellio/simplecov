@@ -11,6 +11,9 @@ require "capybara/cucumber"
 require "capybara/apparition"
 require "simplecov"
 
+features_coverage_dir = Pathname.new(File.expand_path("../../tmp/features-coverage/", __dir__))
+FileUtils.rm_rf(features_coverage_dir)
+
 # Rack app for Capybara which returns the latest coverage report from Aruba temp project dir
 coverage_dir = File.expand_path("../../tmp/aruba/project/coverage/", __dir__)
 Capybara.app = Rack::Builder.new do
@@ -40,6 +43,27 @@ end
 Before("@process_fork") do
   # Process.fork is NotImplementedError in jruby
   skip_this_scenario if defined?(RUBY_ENGINE) && RUBY_ENGINE == "jruby"
+end
+
+at_exit do
+  SimpleCov.configure do
+    enable_coverage :line
+    enable_coverage :branch
+    enable_coverage :method
+    add_filter "tmp/"
+    add_filter "spec/"
+    track_files "lib/**/*.rb"
+    coverage_dir "tmp/cucumber-coverage"
+  end
+
+  resultsets = features_coverage_dir.glob("*/.resultset.json")
+
+  if resultsets.empty?
+    warn "WARNING: no feature coverage found, you probably should require " \
+         "setup_cucumber_feature_coverage.rb"
+  else
+    SimpleCov.collate(resultsets)
+  end
 end
 
 Aruba.configure do |config|

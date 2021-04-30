@@ -10,7 +10,8 @@ Feature:
   Scenario: refuse_coverage_drop configured
     Given SimpleCov for Test/Unit is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
+
       SimpleCov.start do
         add_filter 'test.rb'
         refuse_coverage_drop
@@ -56,7 +57,8 @@ Feature:
   Scenario: refuse_coverage_drop not configured updates resultset
     Given SimpleCov for Test/Unit is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
+
       SimpleCov.start do
         add_filter 'test.rb'
       end

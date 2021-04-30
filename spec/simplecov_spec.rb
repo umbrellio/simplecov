@@ -35,7 +35,7 @@ describe SimpleCov do
         end
 
         it "uses the result from Coverage" do
-          expect(Coverage).to receive(:result).once.and_return(__FILE__ => [0, 1])
+          expect(Coverage).to receive(:peek_result).once.and_return(__FILE__ => [0, 1])
           expect(SimpleCov.result.filenames).to eq [__FILE__]
         end
 
@@ -87,7 +87,7 @@ describe SimpleCov do
         end
 
         it "uses the result from Coverage" do
-          expect(Coverage).to receive(:result).once.and_return({})
+          expect(Coverage).to receive(:peek_result).once.and_return({})
           SimpleCov.result
         end
 

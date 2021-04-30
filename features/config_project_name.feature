@@ -11,7 +11,7 @@ Feature:
   Scenario: Guessed name
     Given SimpleCov for Test/Unit is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
       SimpleCov.start
       """
 
@@ -21,7 +21,7 @@ Feature:
   Scenario: Custom name
     Given SimpleCov for Test/Unit is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
       SimpleCov.start { project_name "Superfancy 2.0" }
       """
 

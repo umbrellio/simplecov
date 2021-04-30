@@ -12,15 +12,16 @@ Feature: Sophisticated grouping and filtering on RSpec
   Scenario:
     Given SimpleCov for RSpec is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
+
       SimpleCov.start do
-        add_group 'By block' do |src_file|
+        add_group "By block" do |src_file|
           src_file.filename =~ /MaGiC/i
         end
-        add_group 'By string', 'project/meta_magic'
-        add_group 'By array', ['project/meta_magic']
+        add_group "By string", "project/meta_magic"
+        add_group "By array", ["project/meta_magic"]
 
-        add_filter 'faked_project.rb'
+        add_filter "faked_project.rb"
         # Remove all files that include "describe" in their source
         add_filter {|src_file| src_file.lines.any? {|line| line.src =~ /describe/ } }
         add_filter {|src_file| src_file.covered_percent < 100 }

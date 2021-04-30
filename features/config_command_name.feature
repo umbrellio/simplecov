@@ -12,14 +12,16 @@ Feature: Custom names for individual test suites
   Scenario:
     Given SimpleCov for Test/Unit is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
+
       SimpleCov.start do
         command_name "I'm in UR Unitz"
       end
       """
     Given SimpleCov for RSpec is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
+
       SimpleCov.start do
         command_name "Dreck macht Speck"
       end
@@ -37,7 +39,7 @@ Feature: Custom names for individual test suites
   Scenario: RSpec auto detection with spec/features
     Given SimpleCov for RSpec is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
       SimpleCov.start
       """
     And a file named "spec/features/foobar_spec.rb" with:

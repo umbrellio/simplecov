@@ -7,11 +7,7 @@ require "open3"
 # Loaded before simplecov to also capture parse time warnings
 require "support/fail_rspec_on_ruby_warning"
 
-# We have to start coverage ourself since it should be done before requiring any SimpleCov code
-require "coverage"
-coverage_args = Coverage.method(:start).arity.zero? ? [] : [:all]
-Coverage.start(*coverage_args)
-
+require "setup_test_coverage"
 require "simplecov"
 
 simplecov = SimpleCov.build
@@ -21,6 +17,7 @@ simplecov.start do
   formatter SimpleCov::Formatter::HTMLFormatter
   add_filter "/spec/"
   track_files "lib/**/*.rb"
+  coverage_dir "tmp/rspec-coverage"
   enable_coverage :line
   enable_coverage :branch
   enable_coverage :method

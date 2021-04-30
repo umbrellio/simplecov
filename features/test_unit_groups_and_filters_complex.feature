@@ -12,17 +12,19 @@ Feature: Sophisticated grouping and filtering on Test/Unit
   Scenario:
     Given SimpleCov for Test/Unit is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
+
       SimpleCov.start do
-        add_group 'By block' do |src_file|
+        add_group "By block" do |src_file|
           src_file.filename =~ /MaGiC/i
         end
-        add_group 'By string', 'project/meta_magic'
 
-        add_filter 'faked_project.rb'
+        add_group "By string", "project/meta_magic"
+        add_filter "faked_project.rb"
+
         # Remove all files that include "describe" in their source
-        add_filter {|src_file| src_file.lines.any? {|line| line.src =~ /TestCase/ } }
-        add_filter {|src_file| src_file.covered_percent < 100 }
+        add_filter { |src_file| src_file.lines.any? {|line| line.src =~ /TestCase/ } }
+        add_filter { |src_file| src_file.covered_percent < 100 }
       end
       """
 

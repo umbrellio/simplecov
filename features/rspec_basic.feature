@@ -10,7 +10,7 @@ Feature:
   Scenario:
     Given SimpleCov for RSpec is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
       SimpleCov.start
       """
 
@@ -20,7 +20,7 @@ Feature:
       | All Files | 91.8%   | 7     |
 
     And I should see the source files:
-      | name                                    | coverage |
+      | name                                    | coverage  |
       | lib/faked_project.rb                    | 100.00 %  |
       | lib/faked_project/some_class.rb         | 80.00 %   |
       | lib/faked_project/framework_specific.rb | 75.00 %   |

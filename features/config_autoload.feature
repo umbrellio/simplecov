@@ -18,17 +18,17 @@ Feature:
     Given a file named ".simplecov" with:
       """
       SimpleCov.start do
-        add_filter 'test.rb'
-        add_filter 'spec.rb'
+        add_filter "test.rb"
+        add_filter "spec.rb"
       end
       """
     Given SimpleCov for Test/Unit is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
       """
     Given SimpleCov for RSpec is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
       """
 
     When I successfully run `bundle exec rake test`

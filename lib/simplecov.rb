@@ -423,7 +423,7 @@ module SimpleCov
     # @return [Hash]
     #
     def adapt_coverage_result
-      @result = SimpleCov::ResultAdapter.call(Coverage.result)
+      @result = SimpleCov::ResultAdapter.call(Coverage.peek_result)
     end
 
     #

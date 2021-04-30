@@ -17,7 +17,7 @@ module SimpleCov
     end
 
     def no_cov_line
-      /^(\s*)#(\s*)(:#{instance.nocov_token}:)/o
+      @no_cov_line ||= /^(\s*)#(\s*)(:#{instance.nocov_token}:)/
     end
 
     def no_cov_line?(line)

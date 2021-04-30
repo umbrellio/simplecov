@@ -12,7 +12,7 @@ Feature:
     Given I install dependencies
     And SimpleCov for RSpec is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
       SimpleCov.start
       """
     When I open the coverage report generated with `bundle exec parallel_rspec spec`
@@ -24,7 +24,7 @@ Feature:
     Given I install dependencies
     And SimpleCov for RSpec is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
       SimpleCov.start
       """
     When I open the coverage report generated with `bundle exec rspec spec`
@@ -35,7 +35,8 @@ Feature:
     Given I install dependencies
     And SimpleCov for RSpec is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
+
       SimpleCov.start do
         enable_coverage :branch
       end
@@ -48,7 +49,8 @@ Feature:
     Given I install dependencies
     And SimpleCov for RSpec is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
+
       SimpleCov.start do
         enable_coverage :branch
       end
@@ -60,7 +62,8 @@ Feature:
     Given I install dependencies
     And SimpleCov for RSpec is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
+
       SimpleCov.start do
         minimum_coverage 89
       end

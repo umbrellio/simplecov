@@ -8,7 +8,7 @@ Feature:
     Given I'm working on the project "faked_project"
     Given SimpleCov for Test/Unit is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
       SimpleCov.start 'test_frameworks'
       """
 

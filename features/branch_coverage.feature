@@ -9,7 +9,8 @@ Feature:
   Scenario:
     Given SimpleCov for RSpec is configured with:
       """
-      require 'simplecov'
+      require "setup_cucumber_feature_coverage"
+
       SimpleCov.start do
         enable_coverage :branch
       end

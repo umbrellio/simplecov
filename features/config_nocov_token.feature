@@ -10,7 +10,7 @@ Feature:
   Scenario: Custom nocov token using nocov_token
     Given SimpleCov for Test/Unit is configured with:
       """
-      require 'simplecov'
+      require 'setup_cucumber_feature_coverage'
       SimpleCov.start 'test_frameworks' do
         nocov_token 'skippit'
       end
@@ -47,9 +47,10 @@ Feature:
   Scenario: Custom nocov token using skip_token
     Given SimpleCov for Test/Unit is configured with:
       """
-      require 'simplecov'
-      SimpleCov.start 'test_frameworks' do
-        skip_token 'skippit'
+      require "setup_cucumber_feature_coverage"
+
+      SimpleCov.start "test_frameworks" do
+        skip_token "skippit"
       end
       """
 
