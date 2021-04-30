@@ -17,6 +17,8 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
+        env:
+          SIMPLECOV_HTML_MODE: methods
 
       - name: Get sqlite for Rails test projects
         run: sudo apt-get install libsqlite3-dev
