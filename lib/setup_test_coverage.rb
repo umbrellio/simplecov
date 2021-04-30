@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # :nocov:
 
 # We have to start coverage ourself since it should be done before requiring any SimpleCov code

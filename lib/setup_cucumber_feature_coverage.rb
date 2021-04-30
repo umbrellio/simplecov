@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # :nocov:
 
 # This file should be required in all cucumber features instead of just "simplecov".
@@ -11,7 +12,7 @@ require_relative "simplecov"
 simplecov = SimpleCov.build
 
 # We need unique directory for each cucumber scenario
-timestamp = (Time.now.to_f * 1000_000_000).to_i
+timestamp = (Time.now.to_f * 1_000_000_000).to_i
 
 simplecov.start do
   formatter SimpleCov::Formatter::SimpleFormatter

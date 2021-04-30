@@ -23,7 +23,7 @@ jobs:
         run: sudo apt-get install libsqlite3-dev
 
       - name: Install bundler
-        run: gem i bundler
+        run: gem update --system && gem install bundler
 
       - name: Install dependencies
         run: |
