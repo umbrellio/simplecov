@@ -12,6 +12,7 @@ AllCops:
     - "vendor/bundle/**/.*"
   TargetRubyVersion: 2.5
   # we might wanna adopt rspec and rake but it's a bit annoying for now
+  NewCops: enable
   SuggestExtensions: false
 
 Bundler/OrderedGems:

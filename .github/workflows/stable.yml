@@ -10,6 +10,10 @@ jobs:
       matrix:
         ruby: ["2.5", "2.6", "2.7", "3.0", "jruby-9.2"]
 
+    env:
+      JRUBY_OPTS: --debug
+      SIMPLECOV_HTML_MODE: methods
+
     steps:
     - uses: actions/checkout@v2
 
@@ -24,8 +28,6 @@ jobs:
 
     - name: Run tests
       run: bundle exec rake
-      env:
-        JRUBY_OPTS: --debug
 
     - name: Merge coverage
       run: bundle exec ruby scripts/merge_coverage.rb
