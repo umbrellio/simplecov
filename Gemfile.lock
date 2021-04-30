@@ -6,11 +6,6 @@ GIT
     simplecov-html (0.12.3)
 
 PATH
-  remote: ../simplecov-html
-  specs:
-    simplecov-html (0.12.3)
-
-PATH
   remote: .
   specs:
     simplecov (0.21.2)
@@ -152,6 +147,7 @@ GEM
     rubocop-ast (1.4.1)
       parser (>= 2.7.1.5)
     ruby-progressbar (1.11.0)
+    simplecov-html (0.12.3)
     simplecov_json_formatter (0.1.2)
     spoon (0.0.6)
       ffi
@@ -192,7 +188,6 @@ DEPENDENCIES
   rspec (~> 3.2)
   rubocop
   simplecov!
-  simplecov-html!
   test-unit
   webrick
 
