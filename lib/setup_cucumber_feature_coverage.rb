@@ -15,7 +15,7 @@ simplecov = SimpleCov.build
 timestamp = (Time.now.to_f * 1_000_000_000).to_i
 
 simplecov.start do
-  formatter SimpleCov::Formatter::SimpleFormatter
+  formatter SimpleCov::Formatter::HTMLFormatter
   root File.expand_path("..", __dir__)
   coverage_dir "tmp/features-coverage/#{timestamp}"
   enable_coverage :line
