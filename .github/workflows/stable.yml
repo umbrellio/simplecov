@@ -22,14 +22,6 @@ jobs:
       - name: Get sqlite for Rails test projects
         run: sudo apt-get install libsqlite3-dev
 
-      - name: Install bundler
-        run: gem update --system && gem install bundler
-
-      - name: Install dependencies
-        run: |
-          bundle config set --local without benchmark
-          bundle install --jobs=3
-
       - name: Run tests (MRI)
         run: bundle exec rake
         if: "!startsWith(matrix.ruby, 'jruby')"
