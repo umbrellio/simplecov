@@ -12,5 +12,9 @@ module SimpleCov
     def round_coverage(coverage)
       coverage.floor(2)
     end
+
+    def render_coverage(coverage)
+      format("%.2f%%", round_coverage(coverage))
+    end
   end
 end

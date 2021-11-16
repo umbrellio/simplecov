@@ -62,9 +62,7 @@ module SimpleCov
       MAX_DROP_ACCURACY = 10
       def drop_percent(criterion)
         drop = last_coverage(criterion) -
-               SimpleCov::Utils.round_coverage(
-                 result.coverage_statistics.fetch(criterion).percent
-               )
+               SimpleCov::Utils.round_coverage(result.coverage_statistics.fetch(criterion).percent)
 
         # floats, I tell ya.
         # irb(main):001:0* 80.01 - 80.0
