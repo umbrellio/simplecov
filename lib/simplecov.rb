@@ -14,8 +14,8 @@ if defined?(JRUBY_VERSION) && defined?(JRuby) && !org.jruby.RubyInstanceConfig.F
   # @see https://jira.codehaus.org/browse/JRUBY-6106
 
   warn 'Coverage may be inaccurate; set the "--debug" command line option,' \
-    ' or do JRUBY_OPTS="--debug"' \
-    ' or set the "debug.fullTrace=true" option in your .jrubyrc'
+       ' or do JRUBY_OPTS="--debug"' \
+       ' or set the "debug.fullTrace=true" option in your .jrubyrc'
 end
 
 #

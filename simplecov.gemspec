@@ -15,10 +15,11 @@ Gem::Specification.new do |gem|
   gem.description = %(Code coverage for Ruby with a powerful configuration library and automatic merging of coverage across test suites)
   gem.license     = "MIT"
   gem.metadata    = {
-    "bug_tracker_uri"   => "https://github.com/umbrellio/simplecov/issues",
-    "changelog_uri"     => "https://github.com/umbrellio/simplecov/blob/main/CHANGELOG.md",
-    "documentation_uri" => "https://www.rubydoc.info/gems/simplecov-method-cov/#{gem.version}",
-    "source_code_uri"   => "https://github.com/umbrellio/simplecov/tree/v#{gem.version}"
+    "bug_tracker_uri"       => "https://github.com/umbrellio/simplecov/issues",
+    "changelog_uri"         => "https://github.com/umbrellio/simplecov/blob/main/CHANGELOG.md",
+    "documentation_uri"     => "https://www.rubydoc.info/gems/simplecov-method-cov/#{gem.version}",
+    "source_code_uri"       => "https://github.com/umbrellio/simplecov/tree/v#{gem.version}",
+    "rubygems_mfa_required" => "true"
   }
 
   gem.required_ruby_version = ">= 2.5.0"
