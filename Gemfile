@@ -2,15 +2,12 @@
 
 source "https://rubygems.org"
 
-case ENV["SIMPLECOV_HTML_MODE"]
-when "local"
-  # Use local copy of simplecov-html in development when checked out
-  gem "simplecov-html", path: "#{File.dirname(__FILE__)}/../simplecov-html"
-when "github"
+if ENV["SIMPLECOV_HTML_BRANCH"]
   # Use development version of html formatter from github
-  gem "simplecov-html", github: "simplecov-ruby/simplecov-html"
-when "methods"
-  gem "simplecov-html", github: "umbrellio/simplecov-html", branch: "add-method-coverage-support"
+  gem "simplecov-html-method-cov", github: "umbrellio/simplecov-html", branch: ENV["SIMPLECOV_HTML_BRANCH"]
+else
+  # Use local copy of simplecov-html-method-cov in development when checked out
+  gem "simplecov-html-method-cov", path: "#{File.dirname(__FILE__)}/../simplecov-html"
 end
 
 group :development do

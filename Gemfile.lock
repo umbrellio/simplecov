@@ -1,16 +1,14 @@
-GIT
-  remote: https://github.com/umbrellio/simplecov-html.git
-  revision: fc9c7a1beaa75bad3a925d1296b94fcd0c96b126
-  branch: add-method-coverage-support
+PATH
+  remote: ../simplecov-html
   specs:
-    simplecov-html (0.12.3)
+    simplecov-html-method-cov (1.0.0)
 
 PATH
   remote: .
   specs:
-    simplecov (0.21.2)
+    simplecov-method-cov (1.0.0)
       docile (~> 1.1)
-      simplecov-html (~> 0.11)
+      simplecov-html-method-cov (~> 1.0)
       simplecov_json_formatter (~> 0.1)
 
 GEM
@@ -80,7 +78,7 @@ GEM
       cucumber-cucumber-expressions (~> 10.1, >= 10.1.0)
       cucumber-messages (~> 12.2, >= 12.2.0)
     diff-lcs (1.3)
-    docile (1.3.5)
+    docile (1.4.0)
     ffi (1.15.0)
     ffi (1.15.0-java)
     i18n (1.8.10)
@@ -147,7 +145,7 @@ GEM
     rubocop-ast (1.4.1)
       parser (>= 2.7.1.5)
     ruby-progressbar (1.11.0)
-    simplecov_json_formatter (0.1.2)
+    simplecov_json_formatter (0.1.3)
     spoon (0.0.6)
       ffi
     sys-uname (1.2.2)
@@ -186,8 +184,8 @@ DEPENDENCIES
   rake (~> 13.0)
   rspec (~> 3.2)
   rubocop
-  simplecov!
-  simplecov-html!
+  simplecov-html-method-cov!
+  simplecov-method-cov!
   test-unit
   webrick
 
