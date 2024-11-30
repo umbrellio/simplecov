@@ -2,7 +2,7 @@
 
 source "https://rubygems.org"
 
-case ENV["SIMPLECOV_HTML_MODE"]
+case ENV.fetch("SIMPLECOV_HTML_MODE", nil)
 when "local"
   # Use local copy of simplecov-html in development when checked out
   gem "simplecov-html", path: File.join(__dir__, "../simplecov-html")
@@ -13,7 +13,9 @@ when "methods" # TODO: remove after simplecov-html release
   gem "simplecov-html", github: "umbrellio/simplecov-html", branch: "add-method-coverage-support"
 end
 
+gem "base64"
 gem "matrix"
+gem "ostruct"
 
 group :development do
   gem "apparition", github: "twalpole/apparition"
