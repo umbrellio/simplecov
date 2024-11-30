@@ -336,7 +336,7 @@ describe SimpleCov do
     end
 
     it "starts coverage with lines and branches if branch coverage is activated" do
-      expect(Coverage).to receive(:start).with(lines: true, branches: true)
+      expect(Coverage).to receive(:start).with({lines: true, branches: true})
 
       SimpleCov.enable_coverage :branch
 
@@ -344,7 +344,7 @@ describe SimpleCov do
     end
 
     it "starts coverage with lines and methods if method coverage is activated" do
-      expect(Coverage).to receive(:start).with(lines: true, methods: true)
+      expect(Coverage).to receive(:start).with({lines: true, methods: true})
 
       SimpleCov.enable_coverage :method
 
