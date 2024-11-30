@@ -16,12 +16,16 @@ end
 gem "matrix"
 
 group :development do
-  gem "apparition", github: "twalpole/apparition" # LOCKED: When this is released, use a released version https://github.com/twalpole/apparition/pull/79
+  gem "apparition", github: "twalpole/apparition"
   gem "activesupport", "~> 6.1"
-  gem "aruba", "~> 1.0"
+  gem "aruba"
   gem "capybara"
-  gem "rackup"
-  gem "cucumber", "~> 6.0"
+  if RUBY_VERSION < "2.7"
+    gem "rack", "< 3"
+  else
+    gem "rackup"
+  end
+  gem "cucumber"
   gem "minitest"
   gem "rake"
   gem "rspec"

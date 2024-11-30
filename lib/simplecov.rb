@@ -334,18 +334,24 @@ module SimpleCov
       if coverage_start_arguments_supported?
         start_coverage_with_criteria
       else
-        Coverage.start unless Coverage.running?
+        Coverage.start unless coverage_running?
       end
     end
 
     def start_coverage_with_criteria
-      start_arguments = coverage_criteria.to_h do |criterion|
+      start_arguments = coverage_criteria.map do |criterion|
         [lookup_corresponding_ruby_coverage_name(criterion), true]
-      end
+      end.to_h
 
       start_arguments[:eval] = true if coverage_for_eval_enabled?
 
-      Coverage.start(start_arguments) unless Coverage.running?
+      Coverage.start(start_arguments) unless coverage_running?
+    end
+
+    def coverage_running?
+      # for ruby versions which do not implement Coverage.running?,
+      # Coverage.start may be called multiple times without raising.
+      Coverage.respond_to?(:running?) && Coverage.running?
     end
 
     CRITERION_TO_RUBY_COVERAGE = {

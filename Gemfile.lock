@@ -190,10 +190,10 @@ PLATFORMS
 DEPENDENCIES
   activesupport (~> 6.1)
   apparition!
-  aruba (~> 1.0)
+  aruba
   benchmark-ips
   capybara
-  cucumber (~> 6.0)
+  cucumber
   matrix
   minitest
   pry
@@ -206,4 +206,4 @@ DEPENDENCIES
   webrick
 
 BUNDLED WITH
-   2.4.20
+   2.5.23
