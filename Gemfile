@@ -14,7 +14,9 @@ when "methods" # TODO: remove after simplecov-html release
 end
 
 gem "base64"
+gem "bigdecimal"
 gem "matrix"
+gem "mutex_m"
 gem "ostruct"
 
 group :development do
