@@ -3,6 +3,7 @@
 source "https://rubygems.org"
 
 # added gems
+gem "logger"
 
 gem "rspec-rails"
 gem "simplecov", path: "../../.."
@@ -50,3 +51,7 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[mingw mswin x64_mingw jruby]
+
+gem "bigdecimal" if RUBY_VERSION >= '3.4'
+gem "mutex_m" if RUBY_VERSION >= '3.4'
+gem "drb" if RUBY_VERSION >= '3.4'
