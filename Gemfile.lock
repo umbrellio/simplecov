@@ -84,7 +84,17 @@ GEM
     diff-lcs (1.5.1)
     docile (1.4.1)
     ffi (1.17.1)
+    ffi (1.17.1-aarch64-linux-gnu)
+    ffi (1.17.1-aarch64-linux-musl)
+    ffi (1.17.1-arm-linux-gnu)
+    ffi (1.17.1-arm-linux-musl)
+    ffi (1.17.1-arm64-darwin)
     ffi (1.17.1-java)
+    ffi (1.17.1-x86-linux-gnu)
+    ffi (1.17.1-x86-linux-musl)
+    ffi (1.17.1-x86_64-darwin)
+    ffi (1.17.1-x86_64-linux-gnu)
+    ffi (1.17.1-x86_64-linux-musl)
     i18n (1.14.6)
       concurrent-ruby (~> 1.0)
     json (2.9.1)
@@ -101,7 +111,23 @@ GEM
     nokogiri (1.18.1)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
+    nokogiri (1.18.1-aarch64-linux-gnu)
+      racc (~> 1.4)
+    nokogiri (1.18.1-aarch64-linux-musl)
+      racc (~> 1.4)
+    nokogiri (1.18.1-arm-linux-gnu)
+      racc (~> 1.4)
+    nokogiri (1.18.1-arm-linux-musl)
+      racc (~> 1.4)
+    nokogiri (1.18.1-arm64-darwin)
+      racc (~> 1.4)
     nokogiri (1.18.1-java)
+      racc (~> 1.4)
+    nokogiri (1.18.1-x86_64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.18.1-x86_64-linux-gnu)
+      racc (~> 1.4)
+    nokogiri (1.18.1-x86_64-linux-musl)
       racc (~> 1.4)
     ostruct (0.6.3)
     parallel (1.26.3)
@@ -179,10 +205,20 @@ GEM
     zeitwerk (2.7.1)
 
 PLATFORMS
+  aarch64-linux-gnu
+  aarch64-linux-musl
+  arm-linux-gnu
+  arm-linux-musl
+  arm64-darwin
   java
   ruby
+  universal-java
   universal-java-1.8
-  universal-java-11
+  x86-linux-gnu
+  x86-linux-musl
+  x86_64-darwin
+  x86_64-linux-gnu
+  x86_64-linux-musl
 
 DEPENDENCIES
   activesupport (~> 6.1)
@@ -209,4 +245,4 @@ DEPENDENCIES
   webrick
 
 BUNDLED WITH
-   2.5.23
+   2.7.2
