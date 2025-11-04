@@ -37,6 +37,7 @@ group :development do
   gem "rubocop", "~> 1.70.0" if RUBY_VERSION > "3.2"
   gem "test-unit"
   gem "logger"
+  gem "power_assert", "~> 2.0" if RUBY_VERSION < "3.0"
   # Explicitly add webrick because it has been removed from stdlib in Ruby 3.0
   gem "webrick"
 end
