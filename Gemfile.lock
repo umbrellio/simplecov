@@ -1,5 +1,5 @@
 GIT
-  remote: https://github.com/twalpole/apparition
+  remote: https://github.com/twalpole/apparition.git
   revision: ca86be4d54af835d531dbcd2b86e7b2c77f85f34
   specs:
     apparition (0.6.0)
@@ -7,7 +7,7 @@ GIT
       websocket-driver (>= 0.6.5)
 
 GIT
-  remote: https://github.com/umbrellio/simplecov-html
+  remote: https://github.com/umbrellio/simplecov-html.git
   revision: cd5c2a4f9f183d245b409436047034258205ee2f
   branch: add-method-coverage-support-update
   specs:
