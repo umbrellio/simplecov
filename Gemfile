@@ -8,9 +8,9 @@ when "local"
   gem "simplecov-html", path: File.join(__dir__, "../simplecov-html")
 when "github"
   # Use development version of html formatter from github
-  gem "simplecov-html", github: "simplecov-ruby/simplecov-html"
+  gem "simplecov-html", git: "https://github.com/simplecov-ruby/simplecov-html"
 when "methods" # TODO: remove after simplecov-html release
-  gem "simplecov-html", github: "umbrellio/simplecov-html", branch: "add-method-coverage-support"
+  gem "simplecov-html", git: "https://github.com/umbrellio/simplecov-html", branch: "add-method-coverage-support-update"
 end
 
 gem "base64"

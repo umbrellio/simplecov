@@ -7,11 +7,11 @@ GIT
       websocket-driver (>= 0.6.5)
 
 GIT
-  remote: https://github.com/umbrellio/simplecov-html.git
-  revision: ba51dee30220b2978b44be1bba86d91056e412f6
-  branch: add-method-coverage-support
+  remote: https://github.com/umbrellio/simplecov-html
+  revision: cd5c2a4f9f183d245b409436047034258205ee2f
+  branch: add-method-coverage-support-update
   specs:
-    simplecov-html (0.12.3)
+    simplecov-html (0.13.2)
 
 PATH
   remote: .
