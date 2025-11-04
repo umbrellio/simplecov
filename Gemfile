@@ -20,7 +20,7 @@ gem "mutex_m"
 gem "ostruct"
 
 group :development do
-  gem "apparition", github: "twalpole/apparition"
+  gem "apparition", git: "https://github.com/twalpole/apparition"
   gem "activesupport", "~> 6.1"
   gem "aruba"
   gem "capybara"
